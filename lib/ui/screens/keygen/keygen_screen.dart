@@ -5,6 +5,6 @@ class KeygenScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("Keygen"));
+    return const Center(child: Text('Keygen'));
   }
 }
