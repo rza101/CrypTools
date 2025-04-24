@@ -9,6 +9,7 @@ class CrypToolsApp extends StatelessWidget {
     return MaterialApp.router(
       title: "CrypTools",
       routerConfig: router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
