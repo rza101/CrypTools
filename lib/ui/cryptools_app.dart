@@ -7,7 +7,15 @@ class CrypToolsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: "CrypTools",
+      title: 'CrypTools',
+      theme: ThemeData(
+        // TODO fix appbar changing color when scrolled
+        // although almost fixed by this configuration
+        appBarTheme: AppBarTheme(
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
+        ),
+      ),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

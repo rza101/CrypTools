@@ -2,6 +2,8 @@ import 'package:cryptools/ui/screens/encode/encode_screen.dart';
 import 'package:cryptools/ui/screens/encrypt/encrypt_screen.dart';
 import 'package:cryptools/ui/screens/hash/hash_screen.dart';
 import 'package:cryptools/ui/screens/history/history_screen.dart';
+import 'package:cryptools/ui/screens/hmac/hmac_screen.dart';
+import 'package:cryptools/ui/screens/key_derivation/key_derivation_screen.dart';
 import 'package:cryptools/ui/screens/keygen/keygen_screen.dart';
 import 'package:cryptools/ui/screens/others/others_screen.dart';
 import 'package:cryptools/ui/screens/random/random_screen.dart';
@@ -17,6 +19,8 @@ class RoutePaths {
   static const encode = '/encode';
   static const random = '/random';
   static const others = '/others';
+  static const hmac = '/hmac';
+  static const keyDerivation = '/key_derivation';
   static const keygen = '/keygen';
   static const history = '/history';
   static const settings = '/settings';
@@ -32,6 +36,9 @@ final List<GoRoute> bottomNavRoutes = [
 
 final bottomNavRoutesPath = bottomNavRoutes.map((route) => route.path).toList();
 
+// TODO fix url not changing when on non shell route
+// if using go, there is no backstack?
+// if using push, url not changing
 final GoRouter router = GoRouter(
   initialLocation: RoutePaths.hash,
   routes: [
@@ -40,11 +47,25 @@ final GoRouter router = GoRouter(
       routes: bottomNavRoutes,
     ),
     GoRoute(
+      path: RoutePaths.hmac,
+      builder:
+          (ctx, state) =>
+              Scaffold(appBar: AppBar(title: Text('HMAC')), body: HMACScreen()),
+    ),
+    GoRoute(
       path: RoutePaths.keygen,
       builder:
           (ctx, state) => Scaffold(
             appBar: AppBar(title: Text('Key Generation')),
             body: KeygenScreen(),
+          ),
+    ),
+    GoRoute(
+      path: RoutePaths.keyDerivation,
+      builder:
+          (ctx, state) => Scaffold(
+            appBar: AppBar(title: Text('Key Derivation')),
+            body: KeyDerivationScreen(),
           ),
     ),
     GoRoute(

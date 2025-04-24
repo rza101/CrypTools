@@ -18,7 +18,7 @@ class MainScaffold extends StatelessWidget {
       (route) => location.startsWith(route.path),
     );
 
-    // TODO break to widgets
+    // TODO break each components to separate widgets
     return Scaffold(
       appBar:
           isWideScreen
