@@ -20,8 +20,7 @@ class DefaultCryptoKeyDerivationService extends CryptoKeyDerivationService {
 
   @override
   Future<String> hashBcrypt(String text, {String? salt}) async {
-    final Map<String, Object?> args = {'text': text, 'salt': salt};
-    return compute(_hashBcryptSync, args);
+    return compute(_hashBcryptSync, {'text': text, 'salt': salt});
   }
 
   String _hashBcryptSync(Map<String, Object?> args) {
@@ -32,8 +31,7 @@ class DefaultCryptoKeyDerivationService extends CryptoKeyDerivationService {
 
   @override
   Future<bool> checkBcrypt(String hashed, String text) async {
-    final Map<String, Object?> args = {'hashed': hashed, 'text': text};
-    return compute(_checkBcryptSync, args);
+    return compute(_checkBcryptSync, {'hashed': hashed, 'text': text});
   }
 
   bool _checkBcryptSync(Map<String, Object?> args) {
@@ -41,4 +39,6 @@ class DefaultCryptoKeyDerivationService extends CryptoKeyDerivationService {
     final text = args['text'] as String;
     return BCrypt.checkpw(text, hashed);
   }
+
+  // TODO add PBKDF2, scrypt, and argon2
 }

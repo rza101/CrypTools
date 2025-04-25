@@ -18,12 +18,14 @@ class _KeyDerivationScreenState extends State<KeyDerivationScreen> {
 
   late String seededSalt;
   late String randomSalt;
+  String? hash;
 
   @override
   void initState() {
     super.initState();
     seededSalt = widget.kdService.genSaltBcrypt(randomSource: widget.random);
     randomSalt = widget.kdService.genSaltBcrypt();
+    _calculateHash();
   }
 
   @override
@@ -32,16 +34,18 @@ class _KeyDerivationScreenState extends State<KeyDerivationScreen> {
       children: [
         ListTile(title: Text('bcrypt salt (with seed): $seededSalt')),
         ListTile(title: Text('bcrypt salt (random): $randomSalt')),
-        FutureBuilder(
-          future: widget.kdService.hashBcrypt(
-            plaintext,
-            salt: widget.kdService.genSaltBcrypt(logRounds: 10),
-          ),
-          builder:
-              (ctx, result) =>
-                  ListTile(title: Text('bcrypt hash: ${result.data}')),
-        ),
+        ListTile(title: Text('bcrypt hash: ${hash ?? 'Calculating'}')),
       ],
     );
+  }
+
+  Future<void> _calculateHash() async {
+    final hashResult = await widget.kdService.hashBcrypt(
+      plaintext,
+      salt: widget.kdService.genSaltBcrypt(logRounds: 10),
+    );
+    setState(() {
+      hash = hashResult;
+    });
   }
 }

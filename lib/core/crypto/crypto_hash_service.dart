@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 enum HashAlgorithms {
   blake2b('Blake2b'),
@@ -34,10 +34,7 @@ enum HashAlgorithms {
 }
 
 abstract class CryptoHashService {
-  Future<String> hashBytes(HashAlgorithms algorithm, Uint8List input);
+  Future<String> hashBytes(HashAlgorithms algorithm, List<int> input);
 
-  Future<String> hashByteStream(
-    HashAlgorithms algorithm,
-    Stream<Uint8List> stream,
-  );
+  Future<String> hashFile(HashAlgorithms algorithm, File file);
 }
