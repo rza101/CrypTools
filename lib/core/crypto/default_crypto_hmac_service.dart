@@ -1,31 +1,42 @@
-import 'dart:typed_data';
-
+import 'package:cross_file/cross_file.dart';
 import 'package:cryptools/core/crypto/crypto_hash_service.dart';
 import 'package:cryptools/core/crypto/crypto_hmac_service.dart';
 import 'package:cryptools/core/extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pointycastle/api.dart';
 
 class DefaultCryptoHMACService implements CryptoHMACService {
   @override
-  Future<String> hmacBytes(
-    HashAlgorithms algorithm,
-    Uint8List key,
-    Uint8List bytes,
-  ) async {
-    final mac = Mac('${algorithm.label}/HMAC')..init(KeyParameter(key));
-    return mac.process(bytes).toHexString();
+  String hmacBytes(HashAlgorithms algorithm, List<int> key, List<int> input) {
+    final mac = Mac('${algorithm.label}/HMAC')
+      ..init(KeyParameter(Uint8List.fromList(key)));
+
+    return mac.process(Uint8List.fromList(input)).toHexString();
   }
 
   @override
-  Future<String> hmacByteStream(
+  Future<String> hmacFile(
     HashAlgorithms algorithm,
-    Uint8List key,
-    Stream<Uint8List> stream,
+    List<int> key,
+    XFile file,
   ) async {
-    final mac = Mac('${algorithm.label}/HMAC')..init(KeyParameter(key));
+    return compute(_hmacFile, {
+      'algorithm': algorithm,
+      'key': key,
+      'file': file,
+    });
+  }
 
-    await for (final chunk in stream) {
-      mac.update(chunk, 0, chunk.length);
+  Future<String> _hmacFile(Map<String, Object?> args) async {
+    final HashAlgorithms algorithm = args['algorithm'] as HashAlgorithms;
+    final List<int> key = args['key'] as List<int>;
+    final XFile file = args['file'] as XFile;
+
+    final mac = Mac('${algorithm.label}/HMAC')
+      ..init(KeyParameter(Uint8List.fromList(key)));
+
+    await for (final chunk in file.openRead()) {
+      mac.update(Uint8List.fromList(chunk), 0, chunk.length);
     }
 
     final output = Uint8List(mac.macSize);

@@ -11,10 +11,6 @@ class OthersScreen extends StatelessWidget {
       child: Column(
         children: [
           ElevatedButton(
-            onPressed: () => context.push(RoutePaths.hmac),
-            child: const Text('HMAC'),
-          ),
-          ElevatedButton(
             onPressed: () => context.push(RoutePaths.keyDerivation),
             child: const Text('Key Derivation'),
           ),

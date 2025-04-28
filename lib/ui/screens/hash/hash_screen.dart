@@ -1,58 +1,195 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:cross_file/cross_file.dart';
 import 'package:cryptools/core/crypto/crypto_hash_service.dart';
 import 'package:cryptools/core/crypto/default_crypto_hash_service.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:cryptools/ui/widgets/file_input_container.dart';
+import 'package:cryptools/ui/widgets/hash_type_selector.dart';
+import 'package:cryptools/ui/widgets/input_type_selector.dart';
 import 'package:flutter/material.dart';
 
+// TODO refactor using mvvm
 class HashScreen extends StatefulWidget {
-  HashScreen({super.key});
-
   final hashService = DefaultCryptoHashService();
-  final plaintext = utf8.encode('12345678');
+
+  HashScreen({super.key});
 
   @override
   State<HashScreen> createState() => _HashScreenState();
 }
 
 class _HashScreenState extends State<HashScreen> {
-  final Map<String, String> plaintextHashResults = {};
-  final Map<String, String> fileHashResults = {};
+  final _hashResultController = TextEditingController();
+  final _hmacKeyInputController = TextEditingController();
+  final _textInputController = TextEditingController();
+
+  String? _fileHashResult;
+  HashAlgorithms _selectedHashAlgorithm = HashAlgorithms.md5;
+  bool _isAutoHash = true;
+  bool _isHmacMode = false;
+  XFile? _selectedFile;
+  InputType _selectedInputType = InputType.text;
 
   @override
   void initState() {
     super.initState();
-    _hashPlaintext();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 4,
+          spacing: 24,
           children: [
-            Text('Plaintext: 12345678'),
-            Text('Hash:'),
-            Text(
-              plaintextHashResults.entries
-                  .toList()
-                  .map((entry) => '- ${entry.key}: ${entry.value}')
-                  .join('\n'),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4,
+              children: [
+                Text(
+                  'Hash Algorithm',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                HashTypeSelector(
+                  initialValue: HashAlgorithms.md5,
+                  onSelectedValueChanged: (value) {
+                    setState(() {
+                      _selectedHashAlgorithm = value;
+                      _doAutoHashing();
+                    });
+                  },
+                ),
+              ],
             ),
-            Divider(height: 1),
-            ElevatedButton(
-              onPressed: () => _hashFile(),
-              child: Text('Select File'),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4,
+              children: [
+                Text(
+                  'Input Type',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                InputTypeSelector(
+                  selectedType: _selectedInputType,
+                  onSelectedTypeChanged: (value) {
+                    setState(() {
+                      _selectedInputType = value;
+                      _doAutoHashing();
+                    });
+                  },
+                ),
+              ],
             ),
-            Text(
-              fileHashResults.entries
-                  .toList()
-                  .map((entry) => '- ${entry.key}: ${entry.value}')
-                  .join('\n'),
+            Row(
+              spacing: 4,
+              children: [
+                Text(
+                  'HMAC Mode',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                Switch(
+                  value: _isHmacMode,
+                  onChanged: (value) {
+                    setState(() {
+                      _isHmacMode = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Row(
+              spacing: 4,
+              children: [
+                Text(
+                  'Auto Hash',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                Switch(
+                  value: _isAutoHash && _selectedInputType == InputType.text,
+                  onChanged:
+                      _selectedInputType == InputType.text
+                          ? (value) {
+                            setState(() {
+                              _isAutoHash = value;
+                              _doAutoHashing();
+                            });
+                          }
+                          : null,
+                ),
+                FilledButton(
+                  onPressed:
+                      !_isAutoHash || _selectedInputType == InputType.file
+                          ? () {
+                            _doHashing();
+                          }
+                          : null,
+                  child: Text('Hash'),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 200,
+              child: switch (_selectedInputType) {
+                InputType.text => TextField(
+                  controller: _textInputController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Plaintext',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  expands: true,
+                  minLines: null,
+                  maxLines: null,
+                  textAlignVertical: TextAlignVertical.top,
+                  onChanged: (value) {
+                    _doAutoHashing();
+                  },
+                ),
+                InputType.file => FileInputContainer(
+                  onFileSet: (file) {
+                    _selectedFile = file;
+                  },
+                ),
+              },
+            ),
+            if (_isHmacMode)
+              SizedBox(
+                height: 200,
+                child: TextField(
+                  controller: _hmacKeyInputController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'HMAC Key',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  enabled: _isHmacMode,
+                  expands: true,
+                  minLines: null,
+                  maxLines: null,
+                  textAlignVertical: TextAlignVertical.top,
+                  onChanged: (value) {
+                    _doAutoHashing();
+                  },
+                ),
+              ),
+            SizedBox(
+              height: 200,
+              child: TextField(
+                controller: _hashResultController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Hash Result',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                canRequestFocus: false,
+                expands: true,
+                minLines: null,
+                maxLines: null,
+                readOnly: true,
+                textAlignVertical: TextAlignVertical.top,
+              ),
             ),
           ],
         ),
@@ -60,38 +197,44 @@ class _HashScreenState extends State<HashScreen> {
     );
   }
 
-  Future<void> _hashPlaintext() async {
-    for (final algorithm in HashAlgorithms.values) {
-      plaintextHashResults[algorithm.label] = await widget.hashService
-          .hashBytes(algorithm, widget.plaintext);
+  void _doAutoHashing() {
+    if (_isAutoHash) {
+      _doHashing();
+    }
+  }
 
-      setState(() {
-        plaintextHashResults;
-      });
+  void _doHashing() {
+    switch (_selectedInputType) {
+      case InputType.text:
+        _hashPlaintext();
+      case InputType.file:
+        _hashFile();
+    }
+  }
+
+  void _hashPlaintext() {
+    final text = _textInputController.text;
+
+    if (text.isNotEmpty) {
+      _hashResultController.text = widget.hashService.hashBytes(
+        _selectedHashAlgorithm,
+        utf8.encode(text),
+      );
+    } else {
+      _hashResultController.text = '';
     }
   }
 
   void _hashFile() async {
-    final result = await FilePicker.platform.pickFiles();
+    final file = _selectedFile;
 
-    if (result == null || result.files.single.path == null) {
-      return;
-    }
+    _hashResultController.text = '';
 
-    setState(() {
-      fileHashResults.clear();
-    });
-
-    final file = File(result.files.single.path!);
-
-    for (final algorithm in HashAlgorithms.values) {
-      fileHashResults[algorithm.label] = await widget.hashService.hashFile(
-        algorithm,
+    if (file != null) {
+      _hashResultController.text = await widget.hashService.hashFile(
+        _selectedHashAlgorithm,
         file,
       );
-      setState(() {
-        fileHashResults;
-      });
     }
   }
 }

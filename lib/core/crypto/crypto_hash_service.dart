@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:cross_file/cross_file.dart';
 
 enum HashAlgorithms {
   blake2b('Blake2b'),
@@ -34,7 +34,7 @@ enum HashAlgorithms {
 }
 
 abstract class CryptoHashService {
-  Future<String> hashBytes(HashAlgorithms algorithm, List<int> input);
+  String hashBytes(HashAlgorithms algorithm, List<int> input);
 
-  Future<String> hashFile(HashAlgorithms algorithm, File file);
+  Future<String> hashFile(HashAlgorithms algorithm, XFile file);
 }

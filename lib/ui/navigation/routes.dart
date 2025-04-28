@@ -2,7 +2,6 @@ import 'package:cryptools/ui/screens/encode/encode_screen.dart';
 import 'package:cryptools/ui/screens/encrypt/encrypt_screen.dart';
 import 'package:cryptools/ui/screens/hash/hash_screen.dart';
 import 'package:cryptools/ui/screens/history/history_screen.dart';
-import 'package:cryptools/ui/screens/hmac/hmac_screen.dart';
 import 'package:cryptools/ui/screens/key_derivation/key_derivation_screen.dart';
 import 'package:cryptools/ui/screens/keygen/keygen_screen.dart';
 import 'package:cryptools/ui/screens/others/others_screen.dart';
@@ -19,7 +18,6 @@ class RoutePaths {
   static const encode = '/encode';
   static const random = '/random';
   static const others = '/others';
-  static const hmac = '/hmac';
   static const keyDerivation = '/key_derivation';
   static const keygen = '/keygen';
   static const history = '/history';
@@ -45,12 +43,6 @@ final GoRouter router = GoRouter(
     ShellRoute(
       builder: (ctx, state, child) => MainScaffold(child: child),
       routes: bottomNavRoutes,
-    ),
-    GoRoute(
-      path: RoutePaths.hmac,
-      builder:
-          (ctx, state) =>
-              Scaffold(appBar: AppBar(title: Text('HMAC')), body: HMACScreen()),
     ),
     GoRoute(
       path: RoutePaths.keygen,
