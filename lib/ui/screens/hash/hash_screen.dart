@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cross_file/cross_file.dart';
 import 'package:cryptools/core/crypto/crypto_hash_service.dart';
 import 'package:cryptools/core/crypto/default_crypto_hash_service.dart';
+import 'package:cryptools/core/crypto/default_crypto_hmac_service.dart';
 import 'package:cryptools/ui/widgets/file_input_container.dart';
 import 'package:cryptools/ui/widgets/hash_type_selector.dart';
 import 'package:cryptools/ui/widgets/input_type_selector.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 // TODO refactor using mvvm
 class HashScreen extends StatefulWidget {
   final hashService = DefaultCryptoHashService();
+  final hmacService = DefaultCryptoHMACService();
 
   HashScreen({super.key});
 
@@ -23,7 +25,6 @@ class _HashScreenState extends State<HashScreen> {
   final _hmacKeyInputController = TextEditingController();
   final _textInputController = TextEditingController();
 
-  String? _fileHashResult;
   HashAlgorithms _selectedHashAlgorithm = HashAlgorithms.md5;
   bool _isAutoHash = true;
   bool _isHmacMode = false;
@@ -76,7 +77,10 @@ class _HashScreenState extends State<HashScreen> {
                   onSelectedTypeChanged: (value) {
                     setState(() {
                       _selectedInputType = value;
-                      _doAutoHashing();
+                      _selectedFile = null;
+                      _textInputController.clear();
+                      _hmacKeyInputController.clear();
+                      _hashResultController.clear();
                     });
                   },
                 ),
@@ -94,6 +98,7 @@ class _HashScreenState extends State<HashScreen> {
                   onChanged: (value) {
                     setState(() {
                       _isHmacMode = value;
+                      _doAutoHashing();
                     });
                   },
                 ),
@@ -198,7 +203,7 @@ class _HashScreenState extends State<HashScreen> {
   }
 
   void _doAutoHashing() {
-    if (_isAutoHash) {
+    if (_isAutoHash && _selectedInputType != InputType.file) {
       _doHashing();
     }
   }
@@ -214,11 +219,18 @@ class _HashScreenState extends State<HashScreen> {
 
   void _hashPlaintext() {
     final text = _textInputController.text;
+    final hmacKey = _hmacKeyInputController.text;
 
-    if (text.isNotEmpty) {
+    if (text.isNotEmpty && _isHmacMode && hmacKey.isNotEmpty) {
+      _hashResultController.text = widget.hmacService.hmacBytes(
+        algorithm: _selectedHashAlgorithm,
+        key: utf8.encode(hmacKey),
+        input: utf8.encode(text),
+      );
+    } else if (text.isNotEmpty && !_isHmacMode) {
       _hashResultController.text = widget.hashService.hashBytes(
-        _selectedHashAlgorithm,
-        utf8.encode(text),
+        algorithm: _selectedHashAlgorithm,
+        input: utf8.encode(text),
       );
     } else {
       _hashResultController.text = '';
@@ -227,14 +239,23 @@ class _HashScreenState extends State<HashScreen> {
 
   void _hashFile() async {
     final file = _selectedFile;
+    final hmacKey = _hmacKeyInputController.text;
 
     _hashResultController.text = '';
 
     if (file != null) {
-      _hashResultController.text = await widget.hashService.hashFile(
-        _selectedHashAlgorithm,
-        file,
-      );
+      if (_isHmacMode && hmacKey.isNotEmpty) {
+        _hashResultController.text = await widget.hmacService.hmacFile(
+          algorithm: _selectedHashAlgorithm,
+          key: utf8.encode(hmacKey),
+          file: file,
+        );
+      } else if (!_isHmacMode) {
+        _hashResultController.text = await widget.hashService.hashFile(
+          algorithm: _selectedHashAlgorithm,
+          file: file,
+        );
+      }
     }
   }
 }

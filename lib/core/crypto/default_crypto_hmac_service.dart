@@ -7,7 +7,11 @@ import 'package:pointycastle/api.dart';
 
 class DefaultCryptoHMACService implements CryptoHMACService {
   @override
-  String hmacBytes(HashAlgorithms algorithm, List<int> key, List<int> input) {
+  String hmacBytes({
+    required HashAlgorithms algorithm,
+    required List<int> key,
+    required List<int> input,
+  }) {
     final mac = Mac('${algorithm.label}/HMAC')
       ..init(KeyParameter(Uint8List.fromList(key)));
 
@@ -15,11 +19,11 @@ class DefaultCryptoHMACService implements CryptoHMACService {
   }
 
   @override
-  Future<String> hmacFile(
-    HashAlgorithms algorithm,
-    List<int> key,
-    XFile file,
-  ) async {
+  Future<String> hmacFile({
+    required HashAlgorithms algorithm,
+    required List<int> key,
+    required XFile file,
+  }) async {
     return compute(_hmacFile, {
       'algorithm': algorithm,
       'key': key,

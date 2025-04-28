@@ -6,14 +6,20 @@ import 'package:pointycastle/api.dart';
 
 class DefaultCryptoHashService implements CryptoHashService {
   @override
-  String hashBytes(HashAlgorithms algorithm, List<int> input) {
+  String hashBytes({
+    required HashAlgorithms algorithm,
+    required List<int> input,
+  }) {
     return Digest(
       algorithm.label,
     ).process(Uint8List.fromList(input)).toHexString();
   }
 
   @override
-  Future<String> hashFile(HashAlgorithms algorithm, XFile file) async {
+  Future<String> hashFile({
+    required HashAlgorithms algorithm,
+    required XFile file,
+  }) async {
     return compute(_hashFile, {'algorithm': algorithm, 'file': file});
   }
 

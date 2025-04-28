@@ -19,7 +19,7 @@ class DefaultCryptoKeyDerivationService extends CryptoKeyDerivationService {
   }
 
   @override
-  Future<String> hashBcrypt(String text, {String? salt}) async {
+  Future<String> hashBcrypt({required String text, String? salt}) async {
     return compute(_hashBcryptSync, {'text': text, 'salt': salt});
   }
 
@@ -30,7 +30,10 @@ class DefaultCryptoKeyDerivationService extends CryptoKeyDerivationService {
   }
 
   @override
-  Future<bool> checkBcrypt(String hashed, String text) async {
+  Future<bool> checkBcrypt({
+    required String hashed,
+    required String text,
+  }) async {
     return compute(_checkBcryptSync, {'hashed': hashed, 'text': text});
   }
 

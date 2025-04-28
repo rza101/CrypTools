@@ -41,7 +41,7 @@ class _KeyDerivationScreenState extends State<KeyDerivationScreen> {
 
   Future<void> _calculateHash() async {
     final hashResult = await widget.kdService.hashBcrypt(
-      plaintext,
+      text: plaintext,
       salt: widget.kdService.genSaltBcrypt(logRounds: 10),
     );
     setState(() {
