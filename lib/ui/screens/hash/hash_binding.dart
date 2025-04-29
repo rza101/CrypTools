@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class HashBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(
+    Get.create(
       () => HashController(hashService: Get.find(), hmacService: Get.find()),
     );
   }

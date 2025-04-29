@@ -29,10 +29,7 @@ class HashScreen extends StatelessWidget {
                 ),
                 HashTypeSelector(
                   initialValue: HashAlgorithms.md5,
-                  onSelectedValueChanged: (value) {
-                    controller.selectedHashAlgorithm.value = value;
-                    controller.doAutoHashing();
-                  },
+                  onSelectedValueChanged: controller.setSelectedHashAlgorithm,
                 ),
               ],
             ),
@@ -47,11 +44,8 @@ class HashScreen extends StatelessWidget {
                 ),
                 Obx(
                   () => InputTypeSelector(
-                    selectedType: controller.selectedInputType.value,
-                    onSelectedTypeChanged: (value) {
-                      controller.selectedInputType.value = value;
-                      controller.clearForm();
-                    },
+                    selectedType: controller.selectedInputType,
+                    onSelectedTypeChanged: controller.setSelectedInputType,
                   ),
                 ),
               ],
@@ -66,11 +60,8 @@ class HashScreen extends StatelessWidget {
                 ),
                 Obx(
                   () => Switch(
-                    value: controller.isHmacMode.value,
-                    onChanged: (value) {
-                      controller.isHmacMode.value = value;
-                      controller.doAutoHashing();
-                    },
+                    value: controller.isHmacMode,
+                    onChanged: controller.setHmacMode,
                   ),
                 ),
               ],
@@ -86,26 +77,20 @@ class HashScreen extends StatelessWidget {
                 Obx(
                   () => Switch(
                     value:
-                        controller.isAutoHash.value &&
-                        controller.selectedInputType.value == InputType.text,
+                        controller.isAutoHash &&
+                        controller.selectedInputType == InputType.text,
                     onChanged:
-                        controller.selectedInputType.value == InputType.text
-                            ? (value) {
-                              controller.isAutoHash.value = value;
-                              controller.doAutoHashing();
-                            }
+                        controller.selectedInputType == InputType.text
+                            ? controller.setAutoHash
                             : null,
                   ),
                 ),
                 Obx(
                   () => FilledButton(
                     onPressed:
-                        !controller.isAutoHash.value ||
-                                controller.selectedInputType.value ==
-                                    InputType.file
-                            ? () {
-                              controller.doHashing();
-                            }
+                        !controller.isAutoHash ||
+                                controller.selectedInputType == InputType.file
+                            ? controller.processHash
                             : null,
                     child: Text('Hash'),
                   ),
@@ -116,7 +101,7 @@ class HashScreen extends StatelessWidget {
             Obx(
               () => SizedBox(
                 height: 200,
-                child: switch (controller.selectedInputType.value) {
+                child: switch (controller.selectedInputType) {
                   InputType.text => TextField(
                     controller: controller.textInputController,
                     decoration: const InputDecoration(
@@ -128,21 +113,16 @@ class HashScreen extends StatelessWidget {
                     minLines: null,
                     maxLines: null,
                     textAlignVertical: TextAlignVertical.top,
-                    onChanged: (value) {
-                      controller.doAutoHashing();
-                    },
                   ),
                   InputType.file => FileInputContainer(
-                    onFileSet: (file) {
-                      controller.selectedFile.value = file;
-                    },
+                    onFileSet: controller.setSelectedFile,
                   ),
                 },
               ),
             ),
             Obx(
               () =>
-                  controller.isHmacMode.value
+                  controller.isHmacMode
                       ? Padding(
                         padding: const EdgeInsets.only(top: 24),
                         child: SizedBox(
@@ -155,14 +135,11 @@ class HashScreen extends StatelessWidget {
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
                             ),
-                            enabled: controller.isHmacMode.value,
+                            enabled: controller.isHmacMode,
                             expands: true,
                             minLines: null,
                             maxLines: null,
                             textAlignVertical: TextAlignVertical.top,
-                            onChanged: (value) {
-                              controller.doAutoHashing();
-                            },
                           ),
                         ),
                       )

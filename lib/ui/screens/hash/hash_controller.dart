@@ -15,25 +15,29 @@ class HashController extends GetxController {
   final TextEditingController hmacKeyInputController = TextEditingController();
   final TextEditingController textInputController = TextEditingController();
 
-  final RxBool isAutoHash = true.obs;
-  final RxBool isHmacMode = false.obs;
-  final Rx<XFile?> selectedFile = Rx<XFile?>(null);
-  final Rx<HashAlgorithms> selectedHashAlgorithm = HashAlgorithms.md5.obs;
-  final Rx<InputType> selectedInputType = InputType.text.obs;
+  final RxBool _isAutoHash = true.obs;
+  final RxBool _isHmacMode = false.obs;
+  final Rx<XFile?> _selectedFile = Rx<XFile?>(null);
+  final Rx<HashAlgorithms> _selectedHashAlgorithm = HashAlgorithms.md5.obs;
+  final Rx<InputType> _selectedInputType = InputType.text.obs;
 
-  // bool get isAutoHash => _isAutoHash.value;
-  // bool get isHmacMode => _isHmacMode.value;
-  // XFile? get selectedFile => _selectedFile.value;
-  // HashAlgorithms get selectedHashAlgorithm => _selectedHashAlgorithm.value;
-  // InputType get selectedInputType => _selectedInputType.value;
+  bool get isAutoHash => _isAutoHash.value;
+  bool get isHmacMode => _isHmacMode.value;
+  XFile? get selectedFile => _selectedFile.value;
+  HashAlgorithms get selectedHashAlgorithm => _selectedHashAlgorithm.value;
+  InputType get selectedInputType => _selectedInputType.value;
 
   HashController({required this.hashService, required this.hmacService});
 
   @override
   void onInit() {
     super.onInit();
-
-    ever(isAutoHash, (value) => {});
+    textInputController.addListener(() {
+      _processHashAuto();
+    });
+    hmacKeyInputController.addListener(() {
+      _processHashAuto();
+    });
   }
 
   @override
@@ -45,67 +49,91 @@ class HashController extends GetxController {
     super.onClose();
   }
 
-  void clearForm() {
-    selectedFile.value = null;
-    textInputController.clear();
-    hmacKeyInputController.clear();
-    hashResultController.clear();
-  }
+  void _hashFile() async {
+    final file = selectedFile;
+    final hmacKey = hmacKeyInputController.text;
 
-  void doAutoHashing() {
-    if (isAutoHash.value && selectedInputType.value != InputType.file) {
-      doHashing();
+    hashResultController.text = '';
+
+    if (file != null) {
+      if (isHmacMode && hmacKey.isNotEmpty) {
+        hashResultController.text = await hmacService.hmacFile(
+          algorithm: selectedHashAlgorithm,
+          key: utf8.encode(hmacKey),
+          file: file,
+        );
+      } else if (!isHmacMode) {
+        hashResultController.text = await hashService.hashFile(
+          algorithm: selectedHashAlgorithm,
+          file: file,
+        );
+      }
     }
   }
 
-  void doHashing() {
-    switch (selectedInputType.value) {
-      case InputType.text:
-        hashPlaintext();
-      case InputType.file:
-        hashFile();
-    }
-  }
-
-  void hashPlaintext() {
+  void _hashText() {
     final text = textInputController.text;
     final hmacKey = hmacKeyInputController.text;
 
-    if (text.isNotEmpty && isHmacMode.value && hmacKey.isNotEmpty) {
+    if (text.isNotEmpty && isHmacMode && hmacKey.isNotEmpty) {
       hashResultController.text = hmacService.hmacBytes(
-        algorithm: selectedHashAlgorithm.value,
+        algorithm: selectedHashAlgorithm,
         key: utf8.encode(hmacKey),
-        input: utf8.encode(text),
+        bytes: utf8.encode(text),
       );
-    } else if (text.isNotEmpty && !isHmacMode.value) {
+    } else if (text.isNotEmpty && !isHmacMode) {
       hashResultController.text = hashService.hashBytes(
-        algorithm: selectedHashAlgorithm.value,
-        input: utf8.encode(text),
+        algorithm: selectedHashAlgorithm,
+        bytes: utf8.encode(text),
       );
     } else {
       hashResultController.text = '';
     }
   }
 
-  void hashFile() async {
-    final file = selectedFile.value;
-    final hmacKey = hmacKeyInputController.text;
-
-    hashResultController.text = '';
-
-    if (file != null) {
-      if (isHmacMode.value && hmacKey.isNotEmpty) {
-        hashResultController.text = await hmacService.hmacFile(
-          algorithm: selectedHashAlgorithm.value,
-          key: utf8.encode(hmacKey),
-          file: file,
-        );
-      } else if (!isHmacMode.value) {
-        hashResultController.text = await hashService.hashFile(
-          algorithm: selectedHashAlgorithm.value,
-          file: file,
-        );
-      }
+  void _processHashAuto() {
+    if (isAutoHash && selectedInputType != InputType.file) {
+      processHash();
     }
+  }
+
+  void clearForm() {
+    _selectedFile.value = null;
+    textInputController.clear();
+    hmacKeyInputController.clear();
+    hashResultController.clear();
+  }
+
+  void processHash() {
+    switch (_selectedInputType.value) {
+      case InputType.text:
+        _hashText();
+      case InputType.file:
+        _hashFile();
+    }
+  }
+
+  void setAutoHash(bool value) {
+    _isAutoHash.value = value;
+    _processHashAuto();
+  }
+
+  void setHmacMode(bool value) {
+    _isHmacMode.value = value;
+    _processHashAuto();
+  }
+
+  void setSelectedFile(XFile? file) {
+    _selectedFile.value = file;
+  }
+
+  void setSelectedHashAlgorithm(HashAlgorithms algorithm) {
+    _selectedHashAlgorithm.value = algorithm;
+    _processHashAuto();
+  }
+
+  void setSelectedInputType(InputType inputType) {
+    _selectedInputType.value = inputType;
+    clearForm();
   }
 }

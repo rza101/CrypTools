@@ -36,7 +36,7 @@ enum HashAlgorithms {
 abstract class CryptoHashService {
   String hashBytes({
     required HashAlgorithms algorithm,
-    required List<int> input,
+    required List<int> bytes,
   });
 
   Future<String> hashFile({

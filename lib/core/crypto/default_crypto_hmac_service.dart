@@ -10,12 +10,12 @@ class DefaultCryptoHMACService implements CryptoHMACService {
   String hmacBytes({
     required HashAlgorithms algorithm,
     required List<int> key,
-    required List<int> input,
+    required List<int> bytes,
   }) {
     final mac = Mac('${algorithm.label}/HMAC')
       ..init(KeyParameter(Uint8List.fromList(key)));
 
-    return mac.process(Uint8List.fromList(input)).toHexString();
+    return mac.process(Uint8List.fromList(bytes)).toHexString();
   }
 
   @override

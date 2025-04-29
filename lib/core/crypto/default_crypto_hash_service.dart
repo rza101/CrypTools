@@ -8,11 +8,11 @@ class DefaultCryptoHashService implements CryptoHashService {
   @override
   String hashBytes({
     required HashAlgorithms algorithm,
-    required List<int> input,
+    required List<int> bytes,
   }) {
     return Digest(
       algorithm.label,
-    ).process(Uint8List.fromList(input)).toHexString();
+    ).process(Uint8List.fromList(bytes)).toHexString();
   }
 
   @override

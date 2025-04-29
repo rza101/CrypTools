@@ -5,7 +5,7 @@ abstract class CryptoHMACService {
   String hmacBytes({
     required HashAlgorithms algorithm,
     required List<int> key,
-    required List<int> input,
+    required List<int> bytes,
   });
 
   Future<String> hmacFile({
