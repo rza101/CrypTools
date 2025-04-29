@@ -1,3 +1,4 @@
+import 'package:cryptools/di/crypto_service_binding.dart';
 import 'package:cryptools/ui/navigation/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,7 @@ class CrypToolsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CryptoServiceBinding().dependencies();
     return MaterialApp.router(
       title: 'CrypTools',
       theme: ThemeData(

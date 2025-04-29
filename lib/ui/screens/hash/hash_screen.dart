@@ -1,40 +1,15 @@
-import 'dart:convert';
-
-import 'package:cross_file/cross_file.dart';
 import 'package:cryptools/core/crypto/crypto_hash_service.dart';
-import 'package:cryptools/core/crypto/default_crypto_hash_service.dart';
-import 'package:cryptools/core/crypto/default_crypto_hmac_service.dart';
+import 'package:cryptools/ui/screens/hash/hash_controller.dart';
 import 'package:cryptools/ui/widgets/file_input_container.dart';
 import 'package:cryptools/ui/widgets/hash_type_selector.dart';
 import 'package:cryptools/ui/widgets/input_type_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-// TODO refactor using mvvm
-class HashScreen extends StatefulWidget {
-  final hashService = DefaultCryptoHashService();
-  final hmacService = DefaultCryptoHMACService();
+class HashScreen extends StatelessWidget {
+  final HashController controller = Get.find();
 
   HashScreen({super.key});
-
-  @override
-  State<HashScreen> createState() => _HashScreenState();
-}
-
-class _HashScreenState extends State<HashScreen> {
-  final _hashResultController = TextEditingController();
-  final _hmacKeyInputController = TextEditingController();
-  final _textInputController = TextEditingController();
-
-  HashAlgorithms _selectedHashAlgorithm = HashAlgorithms.md5;
-  bool _isAutoHash = true;
-  bool _isHmacMode = false;
-  XFile? _selectedFile;
-  InputType _selectedInputType = InputType.text;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +18,6 @@ class _HashScreenState extends State<HashScreen> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 24,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,14 +30,13 @@ class _HashScreenState extends State<HashScreen> {
                 HashTypeSelector(
                   initialValue: HashAlgorithms.md5,
                   onSelectedValueChanged: (value) {
-                    setState(() {
-                      _selectedHashAlgorithm = value;
-                      _doAutoHashing();
-                    });
+                    controller.selectedHashAlgorithm.value = value;
+                    controller.doAutoHashing();
                   },
                 ),
               ],
             ),
+            SizedBox(height: 24),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 4,
@@ -72,20 +45,18 @@ class _HashScreenState extends State<HashScreen> {
                   'Input Type',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-                InputTypeSelector(
-                  selectedType: _selectedInputType,
-                  onSelectedTypeChanged: (value) {
-                    setState(() {
-                      _selectedInputType = value;
-                      _selectedFile = null;
-                      _textInputController.clear();
-                      _hmacKeyInputController.clear();
-                      _hashResultController.clear();
-                    });
-                  },
+                Obx(
+                  () => InputTypeSelector(
+                    selectedType: controller.selectedInputType.value,
+                    onSelectedTypeChanged: (value) {
+                      controller.selectedInputType.value = value;
+                      controller.clearForm();
+                    },
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 24),
             Row(
               spacing: 4,
               children: [
@@ -93,17 +64,18 @@ class _HashScreenState extends State<HashScreen> {
                   'HMAC Mode',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-                Switch(
-                  value: _isHmacMode,
-                  onChanged: (value) {
-                    setState(() {
-                      _isHmacMode = value;
-                      _doAutoHashing();
-                    });
-                  },
+                Obx(
+                  () => Switch(
+                    value: controller.isHmacMode.value,
+                    onChanged: (value) {
+                      controller.isHmacMode.value = value;
+                      controller.doAutoHashing();
+                    },
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 24),
             Row(
               spacing: 4,
               children: [
@@ -111,78 +83,96 @@ class _HashScreenState extends State<HashScreen> {
                   'Auto Hash',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-                Switch(
-                  value: _isAutoHash && _selectedInputType == InputType.text,
-                  onChanged:
-                      _selectedInputType == InputType.text
-                          ? (value) {
-                            setState(() {
-                              _isAutoHash = value;
-                              _doAutoHashing();
-                            });
-                          }
-                          : null,
+                Obx(
+                  () => Switch(
+                    value:
+                        controller.isAutoHash.value &&
+                        controller.selectedInputType.value == InputType.text,
+                    onChanged:
+                        controller.selectedInputType.value == InputType.text
+                            ? (value) {
+                              controller.isAutoHash.value = value;
+                              controller.doAutoHashing();
+                            }
+                            : null,
+                  ),
                 ),
-                FilledButton(
-                  onPressed:
-                      !_isAutoHash || _selectedInputType == InputType.file
-                          ? () {
-                            _doHashing();
-                          }
-                          : null,
-                  child: Text('Hash'),
+                Obx(
+                  () => FilledButton(
+                    onPressed:
+                        !controller.isAutoHash.value ||
+                                controller.selectedInputType.value ==
+                                    InputType.file
+                            ? () {
+                              controller.doHashing();
+                            }
+                            : null,
+                    child: Text('Hash'),
+                  ),
                 ),
               ],
             ),
-            SizedBox(
-              height: 200,
-              child: switch (_selectedInputType) {
-                InputType.text => TextField(
-                  controller: _textInputController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Plaintext',
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                  ),
-                  expands: true,
-                  minLines: null,
-                  maxLines: null,
-                  textAlignVertical: TextAlignVertical.top,
-                  onChanged: (value) {
-                    _doAutoHashing();
-                  },
-                ),
-                InputType.file => FileInputContainer(
-                  onFileSet: (file) {
-                    _selectedFile = file;
-                  },
-                ),
-              },
-            ),
-            if (_isHmacMode)
-              SizedBox(
+            SizedBox(height: 24),
+            Obx(
+              () => SizedBox(
                 height: 200,
-                child: TextField(
-                  controller: _hmacKeyInputController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'HMAC Key',
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                child: switch (controller.selectedInputType.value) {
+                  InputType.text => TextField(
+                    controller: controller.textInputController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Plaintext',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    expands: true,
+                    minLines: null,
+                    maxLines: null,
+                    textAlignVertical: TextAlignVertical.top,
+                    onChanged: (value) {
+                      controller.doAutoHashing();
+                    },
                   ),
-                  enabled: _isHmacMode,
-                  expands: true,
-                  minLines: null,
-                  maxLines: null,
-                  textAlignVertical: TextAlignVertical.top,
-                  onChanged: (value) {
-                    _doAutoHashing();
-                  },
-                ),
+                  InputType.file => FileInputContainer(
+                    onFileSet: (file) {
+                      controller.selectedFile.value = file;
+                    },
+                  ),
+                },
               ),
+            ),
+            Obx(
+              () =>
+                  controller.isHmacMode.value
+                      ? Padding(
+                        padding: const EdgeInsets.only(top: 24),
+                        child: SizedBox(
+                          height: 200,
+                          child: TextField(
+                            controller: controller.hmacKeyInputController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'HMAC Key',
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                            ),
+                            enabled: controller.isHmacMode.value,
+                            expands: true,
+                            minLines: null,
+                            maxLines: null,
+                            textAlignVertical: TextAlignVertical.top,
+                            onChanged: (value) {
+                              controller.doAutoHashing();
+                            },
+                          ),
+                        ),
+                      )
+                      : const SizedBox.shrink(),
+            ),
+            SizedBox(height: 24),
             SizedBox(
               height: 200,
               child: TextField(
-                controller: _hashResultController,
+                controller: controller.hashResultController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Hash Result',
@@ -200,62 +190,5 @@ class _HashScreenState extends State<HashScreen> {
         ),
       ),
     );
-  }
-
-  void _doAutoHashing() {
-    if (_isAutoHash && _selectedInputType != InputType.file) {
-      _doHashing();
-    }
-  }
-
-  void _doHashing() {
-    switch (_selectedInputType) {
-      case InputType.text:
-        _hashPlaintext();
-      case InputType.file:
-        _hashFile();
-    }
-  }
-
-  void _hashPlaintext() {
-    final text = _textInputController.text;
-    final hmacKey = _hmacKeyInputController.text;
-
-    if (text.isNotEmpty && _isHmacMode && hmacKey.isNotEmpty) {
-      _hashResultController.text = widget.hmacService.hmacBytes(
-        algorithm: _selectedHashAlgorithm,
-        key: utf8.encode(hmacKey),
-        input: utf8.encode(text),
-      );
-    } else if (text.isNotEmpty && !_isHmacMode) {
-      _hashResultController.text = widget.hashService.hashBytes(
-        algorithm: _selectedHashAlgorithm,
-        input: utf8.encode(text),
-      );
-    } else {
-      _hashResultController.text = '';
-    }
-  }
-
-  void _hashFile() async {
-    final file = _selectedFile;
-    final hmacKey = _hmacKeyInputController.text;
-
-    _hashResultController.text = '';
-
-    if (file != null) {
-      if (_isHmacMode && hmacKey.isNotEmpty) {
-        _hashResultController.text = await widget.hmacService.hmacFile(
-          algorithm: _selectedHashAlgorithm,
-          key: utf8.encode(hmacKey),
-          file: file,
-        );
-      } else if (!_isHmacMode) {
-        _hashResultController.text = await widget.hashService.hashFile(
-          algorithm: _selectedHashAlgorithm,
-          file: file,
-        );
-      }
-    }
   }
 }

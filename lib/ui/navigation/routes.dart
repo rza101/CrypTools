@@ -1,5 +1,6 @@
 import 'package:cryptools/ui/screens/encode/encode_screen.dart';
 import 'package:cryptools/ui/screens/encrypt/encrypt_screen.dart';
+import 'package:cryptools/ui/screens/hash/hash_binding.dart';
 import 'package:cryptools/ui/screens/hash/hash_screen.dart';
 import 'package:cryptools/ui/screens/history/history_screen.dart';
 import 'package:cryptools/ui/screens/key_derivation/key_derivation_screen.dart';
@@ -25,7 +26,13 @@ class RoutePaths {
 }
 
 final List<GoRoute> bottomNavRoutes = [
-  GoRoute(path: RoutePaths.hash, builder: (ctx, state) => HashScreen()),
+  GoRoute(
+    path: RoutePaths.hash,
+    builder: (ctx, state) {
+      HashBinding().dependencies();
+      return HashScreen();
+    },
+  ),
   GoRoute(path: RoutePaths.encrypt, builder: (ctx, state) => EncryptScreen()),
   GoRoute(path: RoutePaths.encode, builder: (ctx, state) => EncodeScreen()),
   GoRoute(path: RoutePaths.random, builder: (ctx, state) => RandomScreen()),
