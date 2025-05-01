@@ -32,9 +32,9 @@ class DefaultCryptoHMACService implements CryptoHMACService {
   }
 
   Future<String> _hmacFile(Map<String, Object?> args) async {
-    final HashAlgorithms algorithm = args['algorithm'] as HashAlgorithms;
-    final List<int> key = args['key'] as List<int>;
-    final XFile file = args['file'] as XFile;
+    final algorithm = args['algorithm'] as HashAlgorithms;
+    final key = args['key'] as List<int>;
+    final file = args['file'] as XFile;
 
     final mac = Mac('${algorithm.label}/HMAC')
       ..init(KeyParameter(Uint8List.fromList(key)));

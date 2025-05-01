@@ -15,7 +15,7 @@ class HashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -155,7 +155,6 @@ class HashScreen extends StatelessWidget {
                   labelText: 'Hash Result',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
-                canRequestFocus: false,
                 expands: true,
                 minLines: null,
                 maxLines: null,

@@ -24,8 +24,8 @@ class DefaultCryptoHashService implements CryptoHashService {
   }
 
   Future<String> _hashFile(Map<String, Object?> args) async {
-    final HashAlgorithms algorithm = args['algorithm'] as HashAlgorithms;
-    final XFile file = args['file'] as XFile;
+    final algorithm = args['algorithm'] as HashAlgorithms;
+    final file = args['file'] as XFile;
 
     final digest = Digest(algorithm.label);
 

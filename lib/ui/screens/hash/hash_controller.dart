@@ -8,26 +8,33 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class HashController extends GetxController {
-  final CryptoHashService hashService;
-  final CryptoHMACService hmacService;
+  final CryptoHashService _hashService;
+  final CryptoHMACService _hmacService;
 
-  final TextEditingController hashResultController = TextEditingController();
-  final TextEditingController hmacKeyInputController = TextEditingController();
-  final TextEditingController textInputController = TextEditingController();
+  final hashResultController = TextEditingController();
+  final hmacKeyInputController = TextEditingController();
+  final textInputController = TextEditingController();
 
-  final RxBool _isAutoHash = true.obs;
-  final RxBool _isHmacMode = false.obs;
-  final Rx<XFile?> _selectedFile = Rx<XFile?>(null);
-  final Rx<HashAlgorithms> _selectedHashAlgorithm = HashAlgorithms.md5.obs;
-  final Rx<InputType> _selectedInputType = InputType.text.obs;
-
+  final _isAutoHash = true.obs;
   bool get isAutoHash => _isAutoHash.value;
+
+  final _isHmacMode = false.obs;
   bool get isHmacMode => _isHmacMode.value;
+
+  final _selectedFile = Rx<XFile?>(null);
   XFile? get selectedFile => _selectedFile.value;
+
+  final _selectedHashAlgorithm = HashAlgorithms.md5.obs;
   HashAlgorithms get selectedHashAlgorithm => _selectedHashAlgorithm.value;
+
+  final _selectedInputType = InputType.text.obs;
   InputType get selectedInputType => _selectedInputType.value;
 
-  HashController({required this.hashService, required this.hmacService});
+  HashController({
+    required CryptoHashService hashService,
+    required CryptoHMACService hmacService,
+  }) : _hashService = hashService,
+       _hmacService = hmacService;
 
   @override
   void onInit() {
@@ -55,39 +62,45 @@ class HashController extends GetxController {
 
     hashResultController.text = '';
 
-    if (file != null) {
-      if (isHmacMode && hmacKey.isNotEmpty) {
-        hashResultController.text = await hmacService.hmacFile(
-          algorithm: selectedHashAlgorithm,
-          key: utf8.encode(hmacKey),
-          file: file,
-        );
-      } else if (!isHmacMode) {
-        hashResultController.text = await hashService.hashFile(
-          algorithm: selectedHashAlgorithm,
-          file: file,
-        );
+    try {
+      if (file != null) {
+        if (isHmacMode && hmacKey.isNotEmpty) {
+          hashResultController.text = await _hmacService.hmacFile(
+            algorithm: selectedHashAlgorithm,
+            key: utf8.encode(hmacKey),
+            file: file,
+          );
+        } else if (!isHmacMode) {
+          hashResultController.text = await _hashService.hashFile(
+            algorithm: selectedHashAlgorithm,
+            file: file,
+          );
+        }
       }
-    }
+    } catch (e) {}
   }
 
   void _hashText() {
     final text = textInputController.text;
     final hmacKey = hmacKeyInputController.text;
 
-    if (text.isNotEmpty && isHmacMode && hmacKey.isNotEmpty) {
-      hashResultController.text = hmacService.hmacBytes(
-        algorithm: selectedHashAlgorithm,
-        key: utf8.encode(hmacKey),
-        bytes: utf8.encode(text),
-      );
-    } else if (text.isNotEmpty && !isHmacMode) {
-      hashResultController.text = hashService.hashBytes(
-        algorithm: selectedHashAlgorithm,
-        bytes: utf8.encode(text),
-      );
-    } else {
-      hashResultController.text = '';
+    try {
+      if (text.isNotEmpty && isHmacMode && hmacKey.isNotEmpty) {
+        hashResultController.text = _hmacService.hmacBytes(
+          algorithm: selectedHashAlgorithm,
+          key: utf8.encode(hmacKey),
+          bytes: utf8.encode(text),
+        );
+      } else if (text.isNotEmpty && !isHmacMode) {
+        hashResultController.text = _hashService.hashBytes(
+          algorithm: selectedHashAlgorithm,
+          bytes: utf8.encode(text),
+        );
+      } else {
+        hashResultController.text = '';
+      }
+    } catch (e) {
+      hashResultController.text = 'Hashing error';
     }
   }
 
