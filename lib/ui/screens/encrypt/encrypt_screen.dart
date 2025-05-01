@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EncryptScreen extends StatelessWidget {
-  final EncryptController controller = Get.find();
+  final EncryptController _controller = Get.find();
 
   EncryptScreen({super.key});
 
@@ -18,13 +18,13 @@ class EncryptScreen extends StatelessWidget {
           children: [
             Text('Algorithm: AES-GCM'),
             TextField(
-              controller: controller.keyInputController,
+              controller: _controller.keyInputController,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 labelText: 'Key (128/192/256 bits in Base64)',
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 suffixIcon: IconButton(
-                  onPressed: controller.generateRandomKey,
+                  onPressed: _controller.generateRandomKey,
                   icon: Icon(Icons.refresh),
                 ),
               ),
@@ -32,13 +32,13 @@ class EncryptScreen extends StatelessWidget {
               textAlignVertical: TextAlignVertical.top,
             ),
             TextField(
-              controller: controller.nonceInputController,
+              controller: _controller.nonceInputController,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 labelText: 'Nonce (192 bits in Base64)',
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 suffixIcon: IconButton(
-                  onPressed: controller.generateNonce,
+                  onPressed: _controller.generateNonce,
                   icon: Icon(Icons.refresh),
                 ),
               ),
@@ -48,7 +48,7 @@ class EncryptScreen extends StatelessWidget {
             SizedBox(
               height: 200,
               child: TextField(
-                controller: controller.plaintextController,
+                controller: _controller.plaintextController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Plaintext (UTF-8)',
@@ -65,11 +65,11 @@ class EncryptScreen extends StatelessWidget {
               spacing: 24,
               children: [
                 FilledButton(
-                  onPressed: controller.aesEncrypt,
+                  onPressed: _controller.aesEncrypt,
                   child: Text('Encrypt'),
                 ),
                 FilledButton(
-                  onPressed: controller.aesDecrypt,
+                  onPressed: _controller.aesDecrypt,
                   child: Text('Decrypt'),
                 ),
               ],
@@ -77,7 +77,7 @@ class EncryptScreen extends StatelessWidget {
             SizedBox(
               height: 200,
               child: TextField(
-                controller: controller.ciphertextController,
+                controller: _controller.ciphertextController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Ciphertext (Base64)',

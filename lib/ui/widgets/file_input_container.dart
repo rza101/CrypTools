@@ -4,9 +4,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class FileInputContainer extends StatefulWidget {
-  final ValueChanged<XFile?> onFileSet;
+  final ValueChanged<XFile?> _onFileSet;
 
-  const FileInputContainer({super.key, required this.onFileSet});
+  const FileInputContainer({
+    super.key,
+    required void Function(XFile?) onFileSet,
+  }) : _onFileSet = onFileSet;
 
   @override
   State<FileInputContainer> createState() => _FileInputContainerState();
@@ -34,7 +37,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
                     file = resultFile;
                     filename = resultFilename;
 
-                    widget.onFileSet(resultFile);
+                    widget._onFileSet(resultFile);
                   });
                 }
               }
@@ -51,7 +54,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
             file = resultFile;
             filename = resultFilename;
 
-            widget.onFileSet(resultFile);
+            widget._onFileSet(resultFile);
           }
         },
         onDragEntered: (detail) {
@@ -118,7 +121,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
       file = null;
       filename = null;
 
-      widget.onFileSet(null);
+      widget._onFileSet(null);
     });
   }
 }

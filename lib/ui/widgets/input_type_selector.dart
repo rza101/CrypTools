@@ -10,14 +10,15 @@ enum InputType {
 }
 
 class InputTypeSelector extends StatelessWidget {
-  final InputType selectedType;
-  final ValueChanged<InputType> onSelectedTypeChanged;
+  final InputType _selectedType;
+  final ValueChanged<InputType> _onSelectedTypeChanged;
 
   const InputTypeSelector({
     super.key,
-    required this.selectedType,
-    required this.onSelectedTypeChanged,
-  });
+    required InputType selectedType,
+    required void Function(InputType) onSelectedTypeChanged,
+  }) : _onSelectedTypeChanged = onSelectedTypeChanged,
+       _selectedType = selectedType;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +27,9 @@ class InputTypeSelector extends StatelessWidget {
         ButtonSegment(value: InputType.text, label: Text(InputType.text.label)),
         ButtonSegment(value: InputType.file, label: Text(InputType.file.label)),
       ],
-      selected: {selectedType},
+      selected: {_selectedType},
       onSelectionChanged:
-          (newSelectionSet) => onSelectedTypeChanged(newSelectionSet.first),
+          (newSelectionSet) => _onSelectedTypeChanged(newSelectionSet.first),
       showSelectedIcon: false,
     );
   }

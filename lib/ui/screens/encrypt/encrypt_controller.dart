@@ -33,7 +33,7 @@ class EncryptController extends GetxController {
     late Uint8List nonce;
 
     try {
-      key = Base64Decoder().convert(keyInputController.text);
+      key = base64.decode(keyInputController.text);
       assert([128, 192, 256].contains(key.length * 8));
     } catch (e) {
       ciphertextController.text =
@@ -42,7 +42,7 @@ class EncryptController extends GetxController {
     }
 
     try {
-      nonce = Base64Decoder().convert(nonceInputController.text);
+      nonce = base64.decode(nonceInputController.text);
       assert(nonce.length * 8 == 96);
     } catch (e) {
       ciphertextController.text = 'Nonce must be in Base64 with 96 bits length';
@@ -50,7 +50,7 @@ class EncryptController extends GetxController {
     }
 
     try {
-      ciphertextController.text = Base64Encoder().convert(
+      ciphertextController.text = base64.encode(
         _encryptService.aesEncrypt(
           key: key,
           nonce: nonce,
@@ -67,7 +67,7 @@ class EncryptController extends GetxController {
     late Uint8List nonce;
 
     try {
-      key = Base64Decoder().convert(keyInputController.text);
+      key = base64.decode(keyInputController.text);
       assert([128, 192, 256].contains(key.length * 8));
     } catch (e) {
       plaintextController.text =
@@ -76,7 +76,7 @@ class EncryptController extends GetxController {
     }
 
     try {
-      nonce = Base64Decoder().convert(nonceInputController.text);
+      nonce = base64.decode(nonceInputController.text);
       assert(nonce.length * 8 == 96);
     } catch (e) {
       plaintextController.text = 'Nonce must be in Base64 with 96 bits length';
@@ -88,7 +88,7 @@ class EncryptController extends GetxController {
         _encryptService.aesDecrypt(
           key: key,
           nonce: nonce,
-          ciphertext: Base64Decoder().convert(ciphertextController.text),
+          ciphertext: base64.decode(ciphertextController.text),
         ),
       );
     } catch (e) {
@@ -97,13 +97,13 @@ class EncryptController extends GetxController {
   }
 
   void generateNonce() {
-    nonceInputController.text = Base64Encoder().convert(
+    nonceInputController.text = base64.encode(
       _randomService.generateRandomBytes(12),
     );
   }
 
   void generateRandomKey() {
-    keyInputController.text = Base64Encoder().convert(
+    keyInputController.text = base64.encode(
       _randomService.generateRandomBytes(32),
     );
   }

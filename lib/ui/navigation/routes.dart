@@ -1,3 +1,4 @@
+import 'package:cryptools/ui/screens/encode/encode_binding.dart';
 import 'package:cryptools/ui/screens/encode/encode_screen.dart';
 import 'package:cryptools/ui/screens/encrypt/encrypt_binding.dart';
 import 'package:cryptools/ui/screens/encrypt/encrypt_screen.dart';
@@ -41,7 +42,13 @@ final List<GoRoute> bottomNavRoutes = [
       return EncryptScreen();
     },
   ),
-  GoRoute(path: RoutePaths.encode, builder: (ctx, state) => EncodeScreen()),
+  GoRoute(
+    path: RoutePaths.encode,
+    builder: (ctx, state) {
+      EncodeBinding().dependencies();
+      return EncodeScreen();
+    },
+  ),
   GoRoute(path: RoutePaths.random, builder: (ctx, state) => RandomScreen()),
   GoRoute(path: RoutePaths.others, builder: (ctx, state) => OthersScreen()),
 ];

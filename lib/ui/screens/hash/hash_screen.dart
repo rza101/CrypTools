@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HashScreen extends StatelessWidget {
-  final HashController controller = Get.find();
+  final HashController _controller = Get.find();
 
   HashScreen({super.key});
 
@@ -29,7 +29,7 @@ class HashScreen extends StatelessWidget {
                 ),
                 HashTypeSelector(
                   initialValue: HashAlgorithms.md5,
-                  onSelectedValueChanged: controller.setSelectedHashAlgorithm,
+                  onSelectedValueChanged: _controller.setSelectedHashAlgorithm,
                 ),
               ],
             ),
@@ -44,8 +44,8 @@ class HashScreen extends StatelessWidget {
                 ),
                 Obx(
                   () => InputTypeSelector(
-                    selectedType: controller.selectedInputType,
-                    onSelectedTypeChanged: controller.setSelectedInputType,
+                    selectedType: _controller.selectedInputType,
+                    onSelectedTypeChanged: _controller.setSelectedInputType,
                   ),
                 ),
               ],
@@ -60,8 +60,8 @@ class HashScreen extends StatelessWidget {
                 ),
                 Obx(
                   () => Switch(
-                    value: controller.isHmacMode,
-                    onChanged: controller.setHmacMode,
+                    value: _controller.isHmacMode,
+                    onChanged: _controller.setHmacMode,
                   ),
                 ),
               ],
@@ -77,20 +77,20 @@ class HashScreen extends StatelessWidget {
                 Obx(
                   () => Switch(
                     value:
-                        controller.isAutoHash &&
-                        controller.selectedInputType == InputType.text,
+                        _controller.isAutoHash &&
+                        _controller.selectedInputType == InputType.text,
                     onChanged:
-                        controller.selectedInputType == InputType.text
-                            ? controller.setAutoHash
+                        _controller.selectedInputType == InputType.text
+                            ? _controller.setAutoHash
                             : null,
                   ),
                 ),
                 Obx(
                   () => FilledButton(
                     onPressed:
-                        !controller.isAutoHash ||
-                                controller.selectedInputType == InputType.file
-                            ? controller.processHash
+                        !_controller.isAutoHash ||
+                                _controller.selectedInputType == InputType.file
+                            ? _controller.processHash
                             : null,
                     child: Text('Hash'),
                   ),
@@ -101,9 +101,9 @@ class HashScreen extends StatelessWidget {
             Obx(
               () => SizedBox(
                 height: 200,
-                child: switch (controller.selectedInputType) {
+                child: switch (_controller.selectedInputType) {
                   InputType.text => TextField(
-                    controller: controller.textInputController,
+                    controller: _controller.textInputController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Plaintext',
@@ -115,27 +115,27 @@ class HashScreen extends StatelessWidget {
                     textAlignVertical: TextAlignVertical.top,
                   ),
                   InputType.file => FileInputContainer(
-                    onFileSet: controller.setSelectedFile,
+                    onFileSet: _controller.setSelectedFile,
                   ),
                 },
               ),
             ),
             Obx(
               () =>
-                  controller.isHmacMode
+                  _controller.isHmacMode
                       ? Padding(
                         padding: const EdgeInsets.only(top: 24),
                         child: SizedBox(
                           height: 200,
                           child: TextField(
-                            controller: controller.hmacKeyInputController,
+                            controller: _controller.hmacKeyInputController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'HMAC Key',
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
                             ),
-                            enabled: controller.isHmacMode,
+                            enabled: _controller.isHmacMode,
                             expands: true,
                             minLines: null,
                             maxLines: null,
@@ -149,7 +149,7 @@ class HashScreen extends StatelessWidget {
             SizedBox(
               height: 200,
               child: TextField(
-                controller: controller.hashResultController,
+                controller: _controller.hashResultController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Hash Result',
