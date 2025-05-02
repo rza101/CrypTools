@@ -19,24 +19,13 @@ class HashScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4,
-              children: [
-                Text(
-                  'Hash Algorithm',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                HashTypeSelector(
-                  initialValue: HashAlgorithms.md5,
-                  onSelectedValueChanged: _controller.setSelectedHashAlgorithm,
-                ),
-              ],
+            HashTypeSelector(
+              initialSelection: HashAlgorithms.md5,
+              onSelectionChanged: _controller.setSelectedHashAlgorithm,
             ),
-            SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4,
+            const SizedBox(height: 24),
+            Row(
+              spacing: 8,
               children: [
                 Text(
                   'Input Type',
@@ -50,7 +39,7 @@ class HashScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Row(
               spacing: 4,
               children: [
@@ -66,7 +55,7 @@ class HashScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Row(
               spacing: 4,
               children: [
@@ -97,7 +86,7 @@ class HashScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Obx(
               () => SizedBox(
                 height: 200,
@@ -145,7 +134,7 @@ class HashScreen extends StatelessWidget {
                       )
                       : const SizedBox.shrink(),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             SizedBox(
               height: 200,
               child: TextField(

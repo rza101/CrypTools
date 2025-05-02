@@ -95,7 +95,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
                         style: FilledButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
-                        child: Text('Clear File'),
+                        child: const Text('Clear File'),
                       ),
                     ],
                   )
@@ -103,7 +103,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 8,
                     children: [
-                      Icon(Icons.file_open, size: 64),
+                      const Icon(Icons.file_open, size: 64),
                       Text(
                         dragging
                             ? 'Release file to process'

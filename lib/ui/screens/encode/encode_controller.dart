@@ -18,23 +18,31 @@ class EncodeController extends GetxController {
     : _encodeService = encodeService;
 
   void processFirstInput() {
-    secondInputController.text = _encodeService.convertToEncoding(
-      secondEncodingType,
-      _encodeService.convertToByteArray(
-        firstEncodingType,
-        firstInputController.text,
-      ),
-    );
+    try {
+      secondInputController.text = _encodeService.convertToEncoding(
+        secondEncodingType,
+        _encodeService.convertToByteArray(
+          firstEncodingType,
+          firstInputController.text,
+        ),
+      );
+    } catch (e) {
+      secondInputController.text = 'Invalid first input';
+    }
   }
 
   void processSecondInput() {
-    firstInputController.text = _encodeService.convertToEncoding(
-      firstEncodingType,
-      _encodeService.convertToByteArray(
-        secondEncodingType,
-        secondInputController.text,
-      ),
-    );
+    try {
+      firstInputController.text = _encodeService.convertToEncoding(
+        firstEncodingType,
+        _encodeService.convertToByteArray(
+          secondEncodingType,
+          secondInputController.text,
+        ),
+      );
+    } catch (e) {
+      firstInputController.text = 'Invalid second input';
+    }
   }
 
   void setFirstEncodingType(EncodingTypes encoding) {

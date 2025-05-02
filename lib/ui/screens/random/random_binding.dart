@@ -4,6 +4,11 @@ import 'package:get/get.dart';
 class RandomBinding extends Bindings {
   @override
   void dependencies() {
-    Get.create(() => RandomController(randomService: Get.find()));
+    Get.create(
+      () => RandomController(
+        encodeService: Get.find(),
+        randomService: Get.find(),
+      ),
+    );
   }
 }

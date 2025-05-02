@@ -1,3 +1,4 @@
+import 'package:cryptools/core/crypto/crypto_encode_service.dart';
 import 'package:cryptools/ui/screens/encode/encode_controller.dart';
 import 'package:cryptools/ui/widgets/encoding_type_selector.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class EncodeScreen extends StatelessWidget {
           spacing: 24,
           children: [
             EncodingTypeSelector(
+              initialSelection: EncodingTypes.utf8,
               onSelectedTypeChanged: _controller.setFirstEncodingType,
             ),
             SizedBox(
@@ -33,23 +35,23 @@ class EncodeScreen extends StatelessWidget {
                 maxLines: null,
                 onChanged: (value) {
                   _controller.processFirstInput();
-                  print('first');
                 },
                 textAlignVertical: TextAlignVertical.top,
               ),
             ),
             Row(
               children: [
-                Expanded(child: Divider()),
+                const Expanded(child: Divider()),
                 Icon(
                   Icons.swap_vert,
                   color: Theme.of(context).dividerColor,
                   size: 40,
                 ),
-                Expanded(child: Divider()),
+                const Expanded(child: Divider()),
               ],
             ),
             EncodingTypeSelector(
+              initialSelection: EncodingTypes.utf8,
               onSelectedTypeChanged: _controller.setSecondEncodingType,
             ),
             SizedBox(
@@ -65,7 +67,6 @@ class EncodeScreen extends StatelessWidget {
                 maxLines: null,
                 onChanged: (value) {
                   _controller.processSecondInput();
-                  print('second');
                 },
                 textAlignVertical: TextAlignVertical.top,
               ),

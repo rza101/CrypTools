@@ -72,18 +72,18 @@ class _MainScaffoldState extends State<MainScaffold> {
           isWideScreen
               ? null
               : AppBar(
-                title: Text('CrypTools'),
+                title: const Text('CrypTools'),
                 actions: [
                   PopupMenuButton(
                     itemBuilder:
                         (context) => [
                           PopupMenuItem(
                             value: _ActionMenuItems.history.name,
-                            child: Text('History'),
+                            child: const Text('History'),
                           ),
                           PopupMenuItem(
                             value: _ActionMenuItems.settings.name,
-                            child: Text('Settings'),
+                            child: const Text('Settings'),
                           ),
                         ],
                     onSelected: (value) {
@@ -140,11 +140,11 @@ class _MainScaffoldState extends State<MainScaffold> {
                     padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
                     child: Divider(),
                   ),
-                  NavigationDrawerDestination(
+                  const NavigationDrawerDestination(
                     icon: Icon(Icons.history),
                     label: Text('History'),
                   ),
-                  NavigationDrawerDestination(
+                  const NavigationDrawerDestination(
                     icon: Icon(Icons.settings),
                     label: Text('Settings'),
                   ),
@@ -166,7 +166,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                       onPressed: () {
                         _scaffoldKey.currentState?.openDrawer();
                       },
-                      icon: Icon(Icons.menu),
+                      icon: const Icon(Icons.menu),
                     ),
                     destinations:
                         _destinations
@@ -179,7 +179,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                             )
                             .toList(),
                   ),
-                  VerticalDivider(width: 1),
+                  const VerticalDivider(width: 1),
                   Expanded(child: widget.child),
                 ],
               )

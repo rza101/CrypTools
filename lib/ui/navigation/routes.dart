@@ -8,6 +8,7 @@ import 'package:cryptools/ui/screens/history/history_screen.dart';
 import 'package:cryptools/ui/screens/key_derivation/key_derivation_screen.dart';
 import 'package:cryptools/ui/screens/keygen/keygen_screen.dart';
 import 'package:cryptools/ui/screens/others/others_screen.dart';
+import 'package:cryptools/ui/screens/random/random_binding.dart';
 import 'package:cryptools/ui/screens/random/random_screen.dart';
 import 'package:cryptools/ui/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -49,8 +50,17 @@ final List<GoRoute> bottomNavRoutes = [
       return EncodeScreen();
     },
   ),
-  GoRoute(path: RoutePaths.random, builder: (ctx, state) => RandomScreen()),
-  GoRoute(path: RoutePaths.others, builder: (ctx, state) => OthersScreen()),
+  GoRoute(
+    path: RoutePaths.random,
+    builder: (ctx, state) {
+      RandomBinding().dependencies();
+      return RandomScreen();
+    },
+  ),
+  GoRoute(
+    path: RoutePaths.others,
+    builder: (ctx, state) => const OthersScreen(),
+  ),
 ];
 
 final bottomNavRoutesPath = bottomNavRoutes.map((route) => route.path).toList();
@@ -69,7 +79,7 @@ final GoRouter router = GoRouter(
       path: RoutePaths.keygen,
       builder:
           (ctx, state) => Scaffold(
-            appBar: AppBar(title: Text('Key Generation')),
+            appBar: AppBar(title: const Text('Key Generation')),
             body: KeygenScreen(),
           ),
     ),
@@ -77,7 +87,7 @@ final GoRouter router = GoRouter(
       path: RoutePaths.keyDerivation,
       builder:
           (ctx, state) => Scaffold(
-            appBar: AppBar(title: Text('Key Derivation')),
+            appBar: AppBar(title: const Text('Key Derivation')),
             body: KeyDerivationScreen(),
           ),
     ),
@@ -85,7 +95,7 @@ final GoRouter router = GoRouter(
       path: RoutePaths.history,
       builder:
           (ctx, state) => Scaffold(
-            appBar: AppBar(title: Text('History')),
+            appBar: AppBar(title: const Text('History')),
             body: HistoryScreen(),
           ),
     ),
@@ -93,7 +103,7 @@ final GoRouter router = GoRouter(
       path: RoutePaths.settings,
       builder:
           (ctx, state) => Scaffold(
-            appBar: AppBar(title: Text('Settings')),
+            appBar: AppBar(title: const Text('Settings')),
             body: SettingsScreen(),
           ),
     ),

@@ -16,7 +16,7 @@ class EncryptScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24,
           children: [
-            Text('Algorithm: AES-GCM'),
+            const Text('Algorithm: AES-GCM'),
             TextField(
               controller: _controller.keyInputController,
               decoration: InputDecoration(
@@ -66,11 +66,11 @@ class EncryptScreen extends StatelessWidget {
               children: [
                 FilledButton(
                   onPressed: _controller.aesEncrypt,
-                  child: Text('Encrypt'),
+                  child: const Text('Encrypt'),
                 ),
                 FilledButton(
                   onPressed: _controller.aesDecrypt,
-                  child: Text('Decrypt'),
+                  child: const Text('Decrypt'),
                 ),
               ],
             ),

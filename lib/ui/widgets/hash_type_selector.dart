@@ -2,23 +2,24 @@ import 'package:cryptools/core/crypto/crypto_hash_service.dart';
 import 'package:flutter/material.dart';
 
 class HashTypeSelector extends StatelessWidget {
-  final HashAlgorithms _initialValue;
-  final ValueChanged<HashAlgorithms> _onSelectedValueChanged;
+  final HashAlgorithms _initialSelection;
+  final ValueChanged<HashAlgorithms> _onSelectionChanged;
 
   const HashTypeSelector({
     super.key,
-    required HashAlgorithms initialValue,
-    required void Function(HashAlgorithms) onSelectedValueChanged,
-  }) : _onSelectedValueChanged = onSelectedValueChanged,
-       _initialValue = initialValue;
+    required HashAlgorithms initialSelection,
+    required void Function(HashAlgorithms) onSelectionChanged,
+  }) : _onSelectionChanged = onSelectionChanged,
+       _initialSelection = initialSelection;
 
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<HashAlgorithms>(
-      initialSelection: _initialValue,
+      initialSelection: _initialSelection,
+      label: const Text('Hash Algorithm'),
       onSelected: (value) {
         if (value != null) {
-          _onSelectedValueChanged(value);
+          _onSelectionChanged(value);
         }
       },
       dropdownMenuEntries:

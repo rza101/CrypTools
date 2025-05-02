@@ -28,9 +28,9 @@ enum HashAlgorithms {
   whirlpool('Whirlpool'),
   sm3('SM3');
 
-  const HashAlgorithms(this.label);
-
   final String label;
+
+  const HashAlgorithms(this.label);
 }
 
 abstract class CryptoHashService {
