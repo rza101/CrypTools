@@ -4,8 +4,6 @@ import 'package:cryptools/ui/screens/encrypt/encrypt_binding.dart';
 import 'package:cryptools/ui/screens/encrypt/encrypt_screen.dart';
 import 'package:cryptools/ui/screens/hash/hash_binding.dart';
 import 'package:cryptools/ui/screens/hash/hash_screen.dart';
-import 'package:cryptools/ui/screens/history/history_binding.dart';
-import 'package:cryptools/ui/screens/history/history_screen.dart';
 import 'package:cryptools/ui/screens/key_derivation/key_derivation_binding.dart';
 import 'package:cryptools/ui/screens/key_derivation/key_derivation_screen.dart';
 import 'package:cryptools/ui/screens/keygen/keygen_binding.dart';
@@ -28,7 +26,6 @@ class RoutePaths {
   static const others = '/others';
   static const keyDerivation = '/key_derivation';
   static const keygen = '/keygen';
-  static const history = '/history';
   static const settings = '/settings';
 }
 
@@ -96,16 +93,6 @@ final GoRouter router = GoRouter(
         return Scaffold(
           appBar: AppBar(title: const Text('Key Derivation')),
           body: KeyDerivationScreen(),
-        );
-      },
-    ),
-    GoRoute(
-      path: RoutePaths.history,
-      builder: (ctx, state) {
-        HistoryBinding().dependencies();
-        return Scaffold(
-          appBar: AppBar(title: const Text('History')),
-          body: HistoryScreen(),
         );
       },
     ),

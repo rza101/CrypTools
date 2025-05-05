@@ -4,6 +4,11 @@ import 'package:get/get.dart';
 class KeygenBinding extends Bindings {
   @override
   void dependencies() {
-    Get.create(() => KeygenController(keygenService: Get.find()));
+    Get.create(
+      () => KeygenController(
+        keygenService: Get.find(),
+        randomService: Get.find(),
+      ),
+    );
   }
 }

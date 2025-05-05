@@ -3,7 +3,7 @@ import 'package:cryptools/ui/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-enum _ActionMenuItems { history, settings }
+enum _ActionMenuItems { settings }
 
 class _MainDestinations {
   const _MainDestinations({
@@ -78,18 +78,12 @@ class _MainScaffoldState extends State<MainScaffold> {
                     itemBuilder:
                         (context) => [
                           PopupMenuItem(
-                            value: _ActionMenuItems.history.name,
-                            child: const Text('History'),
-                          ),
-                          PopupMenuItem(
                             value: _ActionMenuItems.settings.name,
                             child: const Text('Settings'),
                           ),
                         ],
                     onSelected: (value) {
-                      if (value == _ActionMenuItems.history.name) {
-                        context.push(RoutePaths.history);
-                      } else if (value == _ActionMenuItems.settings.name) {
+                      if (value == _ActionMenuItems.settings.name) {
                         context.push(RoutePaths.settings);
                       }
                     },
@@ -123,8 +117,6 @@ class _MainScaffoldState extends State<MainScaffold> {
                   if (index <= bottomNavRoutesPath.length - 1) {
                     context.go(bottomNavRoutesPath[index]);
                   } else if (index == bottomNavRoutesPath.length) {
-                    context.push(RoutePaths.history);
-                  } else if (index == bottomNavRoutesPath.length + 1) {
                     context.push(RoutePaths.settings);
                   }
                 },
@@ -140,10 +132,6 @@ class _MainScaffoldState extends State<MainScaffold> {
                   const Padding(
                     padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
                     child: Divider(),
-                  ),
-                  const NavigationDrawerDestination(
-                    icon: Icon(Icons.history),
-                    label: Text('History'),
                   ),
                   const NavigationDrawerDestination(
                     icon: Icon(Icons.settings),
