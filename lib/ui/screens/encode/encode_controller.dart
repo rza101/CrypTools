@@ -20,11 +20,11 @@ class EncodeController extends GetxController {
   void processFirstInput() {
     try {
       secondInputController.text = _encodeService.convertToEncoding(
-        secondEncodingType,
         _encodeService.convertToByteArray(
-          firstEncodingType,
           firstInputController.text,
+          firstEncodingType,
         ),
+        secondEncodingType,
       );
     } catch (e) {
       secondInputController.text = 'Invalid first input';
@@ -34,11 +34,11 @@ class EncodeController extends GetxController {
   void processSecondInput() {
     try {
       firstInputController.text = _encodeService.convertToEncoding(
-        firstEncodingType,
         _encodeService.convertToByteArray(
-          secondEncodingType,
           secondInputController.text,
+          secondEncodingType,
         ),
+        firstEncodingType,
       );
     } catch (e) {
       firstInputController.text = 'Invalid second input';

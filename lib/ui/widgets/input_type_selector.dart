@@ -23,10 +23,12 @@ class InputTypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SegmentedButton<InputType>(
-      segments: [
-        ButtonSegment(value: InputType.text, label: Text(InputType.text.label)),
-        ButtonSegment(value: InputType.file, label: Text(InputType.file.label)),
-      ],
+      segments:
+          InputType.values
+              .map(
+                (type) => ButtonSegment(value: type, label: Text(type.label)),
+              )
+              .toList(),
       selected: {_selectedType},
       onSelectionChanged:
           (newSelectionSet) => _onSelectedTypeChanged(newSelectionSet.first),

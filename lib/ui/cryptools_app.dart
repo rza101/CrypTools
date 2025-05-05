@@ -2,6 +2,10 @@ import 'package:cryptools/di/crypto_service_binding.dart';
 import 'package:cryptools/ui/navigation/routes.dart';
 import 'package:flutter/material.dart';
 
+// TODO data validation and error messages
+// TODO hint with info icon button on elements
+// TODO improve UI
+// TODO separate components to widgets
 class CrypToolsApp extends StatelessWidget {
   const CrypToolsApp({super.key});
 
@@ -11,8 +15,6 @@ class CrypToolsApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'CrypTools',
       theme: ThemeData(
-        // TODO fix appbar changing color when scrolled
-        // although almost fixed by this configuration
         appBarTheme: AppBarTheme(
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,

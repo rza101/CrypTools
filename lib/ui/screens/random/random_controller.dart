@@ -31,11 +31,11 @@ class RandomController extends GetxController {
     try {
       outputTextController.text = switch (_encodingType.value) {
         EncodingTypes.ascii || EncodingTypes.utf8 => _encodeService
-            .convertToEncoding(EncodingTypes.hex, _randomBytes),
+            .convertToEncoding(_randomBytes, EncodingTypes.hex),
 
         _ => _encodeService.convertToEncoding(
-          _encodingType.value,
           _randomBytes,
+          _encodingType.value,
         ),
       };
     } catch (e) {

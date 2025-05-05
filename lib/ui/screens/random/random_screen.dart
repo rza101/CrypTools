@@ -1,4 +1,5 @@
 import 'package:cryptools/core/crypto/crypto_encode_service.dart';
+import 'package:cryptools/core/extensions.dart';
 import 'package:cryptools/ui/screens/random/random_controller.dart';
 import 'package:cryptools/ui/widgets/encoding_type_selector.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class RandomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = MediaQuery.of(context).size.width >= 600;
+    final isWideScreen = context.isWideScreen();
 
     return SingleChildScrollView(
       child: Padding(

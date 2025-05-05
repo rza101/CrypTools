@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class OthersScreen extends StatelessWidget {
-  static final _borderRadius = BorderRadius.all(Radius.circular(12));
-
   const OthersScreen({super.key});
 
   @override
@@ -17,9 +15,8 @@ class OthersScreen extends StatelessWidget {
             SizedBox(
               height: 100,
               child: Card(
-                shape: RoundedRectangleBorder(borderRadius: _borderRadius),
+                clipBehavior: Clip.hardEdge,
                 child: InkWell(
-                  borderRadius: _borderRadius,
                   onTap: () => context.push(RoutePaths.keyDerivation),
                   child: Center(
                     child: ListTile(
@@ -33,9 +30,8 @@ class OthersScreen extends StatelessWidget {
             SizedBox(
               height: 100,
               child: Card(
-                shape: RoundedRectangleBorder(borderRadius: _borderRadius),
+                clipBehavior: Clip.hardEdge,
                 child: InkWell(
-                  borderRadius: _borderRadius,
                   onTap: () => context.push(RoutePaths.keygen),
                   child: Center(
                     child: ListTile(

@@ -72,8 +72,8 @@ class HashController extends GetxController {
           );
         } else if (!isHmacMode) {
           hashResultController.text = await _hashService.hashFile(
-            algorithm: selectedHashAlgorithm,
-            file: file,
+            file,
+            selectedHashAlgorithm,
           );
         }
       }
@@ -93,8 +93,8 @@ class HashController extends GetxController {
         );
       } else if (text.isNotEmpty && !isHmacMode) {
         hashResultController.text = _hashService.hashBytes(
-          algorithm: selectedHashAlgorithm,
-          bytes: utf8.encode(text),
+          utf8.encode(text),
+          selectedHashAlgorithm,
         );
       } else {
         hashResultController.text = '';

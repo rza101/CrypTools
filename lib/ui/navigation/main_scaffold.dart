@@ -1,3 +1,4 @@
+import 'package:cryptools/core/extensions.dart';
 import 'package:cryptools/ui/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -58,14 +59,13 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = MediaQuery.of(context).size.width >= 600;
+    final isWideScreen = context.isWideScreen();
 
     final location = GoRouterState.of(context).uri.path;
     final currentRouteIndex = bottomNavRoutes.indexWhere(
       (route) => location.startsWith(route.path),
     );
 
-    // TODO break each components to separate widgets
     return Scaffold(
       key: _scaffoldKey,
       appBar:
@@ -116,6 +116,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               ),
       drawer:
           isWideScreen
+              // TODO overflow on tablet
               ? NavigationDrawer(
                 selectedIndex: currentRouteIndex >= 0 ? currentRouteIndex : 0,
                 onDestinationSelected: (index) {

@@ -4,12 +4,16 @@ import 'package:cryptools/ui/screens/encrypt/encrypt_binding.dart';
 import 'package:cryptools/ui/screens/encrypt/encrypt_screen.dart';
 import 'package:cryptools/ui/screens/hash/hash_binding.dart';
 import 'package:cryptools/ui/screens/hash/hash_screen.dart';
+import 'package:cryptools/ui/screens/history/history_binding.dart';
 import 'package:cryptools/ui/screens/history/history_screen.dart';
+import 'package:cryptools/ui/screens/key_derivation/key_derivation_binding.dart';
 import 'package:cryptools/ui/screens/key_derivation/key_derivation_screen.dart';
+import 'package:cryptools/ui/screens/keygen/keygen_binding.dart';
 import 'package:cryptools/ui/screens/keygen/keygen_screen.dart';
 import 'package:cryptools/ui/screens/others/others_screen.dart';
 import 'package:cryptools/ui/screens/random/random_binding.dart';
 import 'package:cryptools/ui/screens/random/random_screen.dart';
+import 'package:cryptools/ui/screens/settings/settings_binding.dart';
 import 'package:cryptools/ui/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -77,35 +81,43 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: RoutePaths.keygen,
-      builder:
-          (ctx, state) => Scaffold(
-            appBar: AppBar(title: const Text('Key Generation')),
-            body: KeygenScreen(),
-          ),
+      builder: (ctx, state) {
+        KeygenBinding().dependencies();
+        return Scaffold(
+          appBar: AppBar(title: const Text('Key Generation')),
+          body: KeygenScreen(),
+        );
+      },
     ),
     GoRoute(
       path: RoutePaths.keyDerivation,
-      builder:
-          (ctx, state) => Scaffold(
-            appBar: AppBar(title: const Text('Key Derivation')),
-            body: KeyDerivationScreen(),
-          ),
+      builder: (ctx, state) {
+        KeyDerivationBinding().dependencies();
+        return Scaffold(
+          appBar: AppBar(title: const Text('Key Derivation')),
+          body: KeyDerivationScreen(),
+        );
+      },
     ),
     GoRoute(
       path: RoutePaths.history,
-      builder:
-          (ctx, state) => Scaffold(
-            appBar: AppBar(title: const Text('History')),
-            body: HistoryScreen(),
-          ),
+      builder: (ctx, state) {
+        HistoryBinding().dependencies();
+        return Scaffold(
+          appBar: AppBar(title: const Text('History')),
+          body: HistoryScreen(),
+        );
+      },
     ),
     GoRoute(
       path: RoutePaths.settings,
-      builder:
-          (ctx, state) => Scaffold(
-            appBar: AppBar(title: const Text('Settings')),
-            body: SettingsScreen(),
-          ),
+      builder: (ctx, state) {
+        SettingsBinding().dependencies();
+        return Scaffold(
+          appBar: AppBar(title: const Text('Settings')),
+          body: SettingsScreen(),
+        );
+      },
     ),
   ],
 );

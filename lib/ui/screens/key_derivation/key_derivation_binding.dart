@@ -4,6 +4,12 @@ import 'package:get/get.dart';
 class KeyDerivationBinding extends Bindings {
   @override
   void dependencies() {
-    Get.create(() => KeyDerivationController(keyDerivationService: Get.find()));
+    Get.create(
+      () => KeyDerivationController(
+        keyDerivationService: Get.find(),
+        encodeService: Get.find(),
+        randomService: Get.find(),
+      ),
+    );
   }
 }
