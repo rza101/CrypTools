@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cross_file/cross_file.dart';
 
 enum HashAlgorithms {
@@ -34,13 +36,7 @@ enum HashAlgorithms {
 }
 
 abstract class CryptoHashService {
-  String hashBytes({
-    required HashAlgorithms algorithm,
-    required List<int> bytes,
-  });
+  String hashBytes(Uint8List bytes, HashAlgorithms algorithm);
 
-  Future<String> hashFile({
-    required HashAlgorithms algorithm,
-    required XFile file,
-  });
+  Future<String> hashFile(XFile file, HashAlgorithms algorithm);
 }

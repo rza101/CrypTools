@@ -13,7 +13,7 @@ enum EncodingTypes {
 }
 
 abstract class CryptoEncodeService {
-  Uint8List convertToByteArray(EncodingTypes encoding, String data);
+  Uint8List convertToByteArray(String data, EncodingTypes encoding);
 
-  String convertToEncoding(EncodingTypes encoding, Uint8List bytes);
+  String convertToEncoding(Uint8List bytes, EncodingTypes encoding);
 }

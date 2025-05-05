@@ -6,21 +6,13 @@ import 'package:pointycastle/api.dart';
 
 class DefaultCryptoHashService implements CryptoHashService {
   @override
-  String hashBytes({
-    required HashAlgorithms algorithm,
-    required List<int> bytes,
-  }) {
-    return Digest(
-      algorithm.label,
-    ).process(Uint8List.fromList(bytes)).toHexString();
+  String hashBytes(Uint8List bytes, HashAlgorithms algorithm) {
+    return Digest(algorithm.label).process(bytes).toHexString();
   }
 
   @override
-  Future<String> hashFile({
-    required HashAlgorithms algorithm,
-    required XFile file,
-  }) async {
-    return compute(_hashFile, {'algorithm': algorithm, 'file': file});
+  Future<String> hashFile(XFile file, HashAlgorithms algorithm) async {
+    return compute(_hashFile, {'file': file, 'algorithm': algorithm});
   }
 
   Future<String> _hashFile(Map<String, Object?> args) async {
@@ -30,7 +22,7 @@ class DefaultCryptoHashService implements CryptoHashService {
     final digest = Digest(algorithm.label);
 
     await for (final chunk in file.openRead()) {
-      digest.update(Uint8List.fromList(chunk), 0, chunk.length);
+      digest.update(chunk, 0, chunk.length);
     }
 
     final output = Uint8List(digest.digestSize);

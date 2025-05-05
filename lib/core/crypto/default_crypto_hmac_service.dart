@@ -8,39 +8,37 @@ import 'package:pointycastle/api.dart';
 class DefaultCryptoHMACService implements CryptoHMACService {
   @override
   String hmacBytes({
+    required Uint8List bytes,
+    required Uint8List key,
     required HashAlgorithms algorithm,
-    required List<int> key,
-    required List<int> bytes,
   }) {
-    final mac = Mac('${algorithm.label}/HMAC')
-      ..init(KeyParameter(Uint8List.fromList(key)));
+    final mac = Mac('${algorithm.label}/HMAC')..init(KeyParameter(key));
 
-    return mac.process(Uint8List.fromList(bytes)).toHexString();
+    return mac.process(bytes).toHexString();
   }
 
   @override
   Future<String> hmacFile({
-    required HashAlgorithms algorithm,
-    required List<int> key,
     required XFile file,
+    required Uint8List key,
+    required HashAlgorithms algorithm,
   }) async {
     return compute(_hmacFile, {
-      'algorithm': algorithm,
-      'key': key,
       'file': file,
+      'key': key,
+      'algorithm': algorithm,
     });
   }
 
   Future<String> _hmacFile(Map<String, Object?> args) async {
     final algorithm = args['algorithm'] as HashAlgorithms;
-    final key = args['key'] as List<int>;
+    final key = args['key'] as Uint8List;
     final file = args['file'] as XFile;
 
-    final mac = Mac('${algorithm.label}/HMAC')
-      ..init(KeyParameter(Uint8List.fromList(key)));
+    final mac = Mac('${algorithm.label}/HMAC')..init(KeyParameter(key));
 
     await for (final chunk in file.openRead()) {
-      mac.update(Uint8List.fromList(chunk), 0, chunk.length);
+      mac.update(chunk, 0, chunk.length);
     }
 
     final output = Uint8List(mac.macSize);

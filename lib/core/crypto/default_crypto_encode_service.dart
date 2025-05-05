@@ -10,7 +10,7 @@ class DefaultCryptoEncodeService implements CryptoEncodeService {
   static final hexRegex = RegExp(r'^[0-9a-fA-F]*$');
 
   @override
-  Uint8List convertToByteArray(EncodingTypes encoding, String data) {
+  Uint8List convertToByteArray(String data, EncodingTypes encoding) {
     final Uint8List result;
 
     switch (encoding) {
@@ -33,7 +33,7 @@ class DefaultCryptoEncodeService implements CryptoEncodeService {
   }
 
   @override
-  String convertToEncoding(EncodingTypes encoding, Uint8List bytes) {
+  String convertToEncoding(Uint8List bytes, EncodingTypes encoding) {
     return switch (encoding) {
       EncodingTypes.utf8 => utf8.decode(bytes),
 
@@ -48,7 +48,7 @@ class DefaultCryptoEncodeService implements CryptoEncodeService {
     };
   }
 
-  static bool validateEncoding(EncodingTypes encoding, String data) {
+  static bool validateEncoding(String data, EncodingTypes encoding) {
     return switch (encoding) {
       EncodingTypes.utf8 => true,
 
