@@ -30,6 +30,7 @@ class RoutePaths {
 
 final List<GoRoute> bottomNavRoutes = [
   GoRoute(
+    parentNavigatorKey: _bottomNavShellNavigatorKey,
     path: RoutePaths.hash,
     builder: (ctx, state) {
       HashBinding().dependencies();
@@ -37,6 +38,7 @@ final List<GoRoute> bottomNavRoutes = [
     },
   ),
   GoRoute(
+    parentNavigatorKey: _bottomNavShellNavigatorKey,
     path: RoutePaths.encrypt,
     builder: (ctx, state) {
       EncryptBinding().dependencies();
@@ -44,6 +46,7 @@ final List<GoRoute> bottomNavRoutes = [
     },
   ),
   GoRoute(
+    parentNavigatorKey: _bottomNavShellNavigatorKey,
     path: RoutePaths.encode,
     builder: (ctx, state) {
       EncodeBinding().dependencies();
@@ -51,6 +54,7 @@ final List<GoRoute> bottomNavRoutes = [
     },
   ),
   GoRoute(
+    parentNavigatorKey: _bottomNavShellNavigatorKey,
     path: RoutePaths.random,
     builder: (ctx, state) {
       RandomBinding().dependencies();
@@ -58,6 +62,7 @@ final List<GoRoute> bottomNavRoutes = [
     },
   ),
   GoRoute(
+    parentNavigatorKey: _bottomNavShellNavigatorKey,
     path: RoutePaths.others,
     builder: (ctx, state) => const OthersScreen(),
   ),
@@ -65,17 +70,21 @@ final List<GoRoute> bottomNavRoutes = [
 
 final bottomNavRoutesPath = bottomNavRoutes.map((route) => route.path).toList();
 
-// TODO fix url not changing when on non shell route
-// if using go, there is no backstack?
-// if using push, url not changing
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _bottomNavShellNavigatorKey = GlobalKey<NavigatorState>();
+
 final GoRouter router = GoRouter(
+  navigatorKey: _rootNavigatorKey,
   initialLocation: RoutePaths.hash,
   routes: [
     ShellRoute(
-      builder: (ctx, state, child) => MainScaffold(child: child),
+      navigatorKey: _bottomNavShellNavigatorKey,
+      parentNavigatorKey: _rootNavigatorKey,
       routes: bottomNavRoutes,
+      builder: (ctx, state, child) => MainScaffold(child: child),
     ),
     GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
       path: RoutePaths.keygen,
       builder: (ctx, state) {
         KeygenBinding().dependencies();
@@ -86,6 +95,7 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
       path: RoutePaths.keyDerivation,
       builder: (ctx, state) {
         KeyDerivationBinding().dependencies();
@@ -96,6 +106,7 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
       path: RoutePaths.settings,
       builder: (ctx, state) {
         return Scaffold(

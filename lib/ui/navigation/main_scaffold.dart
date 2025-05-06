@@ -110,7 +110,6 @@ class _MainScaffoldState extends State<MainScaffold> {
               ),
       drawer:
           isWideScreen
-              // TODO overflow on tablet
               ? NavigationDrawer(
                 selectedIndex: currentRouteIndex >= 0 ? currentRouteIndex : 0,
                 onDestinationSelected: (index) {
@@ -144,29 +143,38 @@ class _MainScaffoldState extends State<MainScaffold> {
           isWideScreen
               ? Row(
                 children: [
-                  NavigationRail(
-                    selectedIndex:
-                        currentRouteIndex >= 0 ? currentRouteIndex : 0,
-                    onDestinationSelected: (index) {
-                      context.go(bottomNavRoutesPath[index]);
-                    },
-                    labelType: NavigationRailLabelType.all,
-                    leading: IconButton(
-                      onPressed: () {
-                        _scaffoldKey.currentState?.openDrawer();
-                      },
-                      icon: const Icon(Icons.menu),
+                  SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.sizeOf(context).height,
+                      ),
+                      child: IntrinsicHeight(
+                        child: NavigationRail(
+                          selectedIndex:
+                              currentRouteIndex >= 0 ? currentRouteIndex : 0,
+                          onDestinationSelected: (index) {
+                            context.go(bottomNavRoutesPath[index]);
+                          },
+                          labelType: NavigationRailLabelType.all,
+                          leading: IconButton(
+                            onPressed: () {
+                              _scaffoldKey.currentState?.openDrawer();
+                            },
+                            icon: const Icon(Icons.menu),
+                          ),
+                          destinations:
+                              _destinations
+                                  .map(
+                                    (destination) => NavigationRailDestination(
+                                      icon: destination.icon,
+                                      label: Text(destination.label),
+                                      selectedIcon: destination.selectedIcon,
+                                    ),
+                                  )
+                                  .toList(),
+                        ),
+                      ),
                     ),
-                    destinations:
-                        _destinations
-                            .map(
-                              (destination) => NavigationRailDestination(
-                                icon: destination.icon,
-                                label: Text(destination.label),
-                                selectedIcon: destination.selectedIcon,
-                              ),
-                            )
-                            .toList(),
                   ),
                   const VerticalDivider(width: 1),
                   Expanded(child: widget.child),
