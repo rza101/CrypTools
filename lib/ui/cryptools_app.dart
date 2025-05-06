@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 // TODO hint with info icon button on elements
 // TODO improve UI
 // TODO separate components to widgets
-// TODO set app icon and app name
 class CrypToolsApp extends StatelessWidget {
   final ThemeController _themeController = Get.find();
 
