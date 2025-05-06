@@ -1,27 +1,29 @@
-import 'package:cryptools/di/crypto_service_binding.dart';
 import 'package:cryptools/ui/navigation/routes.dart';
+import 'package:cryptools/ui/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // TODO data validation and error messages
 // TODO hint with info icon button on elements
 // TODO improve UI
 // TODO separate components to widgets
 class CrypToolsApp extends StatelessWidget {
-  const CrypToolsApp({super.key});
+  final ThemeController _themeController = Get.find();
+
+  CrypToolsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    CryptoServiceBinding().dependencies();
-    return MaterialApp.router(
-      title: 'CrypTools',
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          scrolledUnderElevation: 0,
-          surfaceTintColor: Colors.transparent,
-        ),
+    return Obx(
+      () => MaterialApp.router(
+        title: 'CrypTools',
+        theme: ThemeData(),
+        darkTheme: ThemeData.dark(),
+        themeMode:
+            _themeController.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        routerConfig: router,
+        debugShowCheckedModeBanner: false,
       ),
-      routerConfig: router,
-      debugShowCheckedModeBanner: false,
     );
   }
 }

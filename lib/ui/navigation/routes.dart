@@ -11,7 +11,6 @@ import 'package:cryptools/ui/screens/keygen/keygen_screen.dart';
 import 'package:cryptools/ui/screens/others/others_screen.dart';
 import 'package:cryptools/ui/screens/random/random_binding.dart';
 import 'package:cryptools/ui/screens/random/random_screen.dart';
-import 'package:cryptools/ui/screens/settings/settings_binding.dart';
 import 'package:cryptools/ui/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -99,7 +98,6 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: RoutePaths.settings,
       builder: (ctx, state) {
-        SettingsBinding().dependencies();
         return Scaffold(
           appBar: AppBar(title: const Text('Settings')),
           body: SettingsScreen(),
