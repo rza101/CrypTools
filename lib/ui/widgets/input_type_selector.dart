@@ -10,6 +10,7 @@ enum InputType {
 }
 
 class InputTypeSelector extends StatelessWidget {
+  final bool _enabled;
   final InputType _selectedType;
   final ValueChanged<InputType> _onSelectedTypeChanged;
 
@@ -17,7 +18,9 @@ class InputTypeSelector extends StatelessWidget {
     super.key,
     required InputType selectedType,
     required void Function(InputType) onSelectedTypeChanged,
-  }) : _onSelectedTypeChanged = onSelectedTypeChanged,
+    bool enabled = true,
+  }) : _enabled = enabled,
+       _onSelectedTypeChanged = onSelectedTypeChanged,
        _selectedType = selectedType;
 
   @override
@@ -31,7 +34,10 @@ class InputTypeSelector extends StatelessWidget {
               .toList(),
       selected: {_selectedType},
       onSelectionChanged:
-          (newSelectionSet) => _onSelectedTypeChanged(newSelectionSet.first),
+          _enabled
+              ? (newSelectionSet) =>
+                  _onSelectedTypeChanged(newSelectionSet.first)
+              : null,
       showSelectedIcon: false,
     );
   }

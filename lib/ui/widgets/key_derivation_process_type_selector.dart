@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 enum KeyDerivationProcessType {
   derive('Derive Key'),
@@ -13,13 +12,16 @@ enum KeyDerivationProcessType {
 class KeyDerivationProcessTypeSelector extends StatelessWidget {
   final KeyDerivationProcessType _selectedType;
   final ValueChanged<KeyDerivationProcessType> _onSelectedTypeChanged;
+  final bool _enabled;
 
   const KeyDerivationProcessTypeSelector({
     super.key,
     required KeyDerivationProcessType selectedType,
     required ValueChanged<KeyDerivationProcessType> onSelectedTypeChanged,
+    bool enabled = true,
   }) : _selectedType = selectedType,
-       _onSelectedTypeChanged = onSelectedTypeChanged;
+       _onSelectedTypeChanged = onSelectedTypeChanged,
+       _enabled = enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,11 @@ class KeyDerivationProcessTypeSelector extends StatelessWidget {
               .toList(),
       selected: {_selectedType},
       onSelectionChanged:
-          (newSelectionSet) => _onSelectedTypeChanged(newSelectionSet.first),
+          _enabled
+              ? (newSelectionSet) => _onSelectedTypeChanged(
+                (newSelectionSet as Set<KeyDerivationProcessType>).first,
+              )
+              : null,
       showSelectedIcon: false,
     );
   }

@@ -3,27 +3,34 @@ import 'package:flutter/material.dart';
 
 class HashTypeSelector extends StatelessWidget {
   final HashAlgorithms _initialSelection;
-  final ValueChanged<HashAlgorithms> _onSelectionChanged;
+  final ValueChanged<HashAlgorithms> _onSelected;
+  final bool _enabled;
+  final List<HashAlgorithms> _entries;
 
   const HashTypeSelector({
     super.key,
     required HashAlgorithms initialSelection,
-    required void Function(HashAlgorithms) onSelectionChanged,
-  }) : _onSelectionChanged = onSelectionChanged,
-       _initialSelection = initialSelection;
+    required void Function(HashAlgorithms) onSelected,
+    bool enabled = true,
+    List<HashAlgorithms> entries = HashAlgorithms.values,
+  }) : _onSelected = onSelected,
+       _initialSelection = initialSelection,
+       _enabled = enabled,
+       _entries = entries;
 
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<HashAlgorithms>(
-      initialSelection: _initialSelection,
+      enabled: _enabled,
       label: const Text('Hash Algorithm'),
+      initialSelection: _initialSelection,
       onSelected: (value) {
         if (value != null) {
-          _onSelectionChanged(value);
+          _onSelected(value);
         }
       },
       dropdownMenuEntries:
-          HashAlgorithms.values
+          _entries
               .map(
                 (algorithm) =>
                     DropdownMenuEntry(value: algorithm, label: algorithm.label),

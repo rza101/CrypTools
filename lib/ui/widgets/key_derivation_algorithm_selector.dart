@@ -12,23 +12,27 @@ enum KeyDerivationAlgorithms {
 
 class KeyDerivationAlgorithmSelector extends StatelessWidget {
   final KeyDerivationAlgorithms _initialSelection;
-  final ValueChanged<KeyDerivationAlgorithms> _onSelectedTypeChanged;
+  final ValueChanged<KeyDerivationAlgorithms> _onSelected;
+  final bool _enabled;
 
   const KeyDerivationAlgorithmSelector({
     super.key,
     required KeyDerivationAlgorithms initialSelection,
-    required ValueChanged<KeyDerivationAlgorithms> onSelectedTypeChanged,
+    required ValueChanged<KeyDerivationAlgorithms> onSelected,
+    bool enabled = true,
   }) : _initialSelection = initialSelection,
-       _onSelectedTypeChanged = onSelectedTypeChanged;
+       _onSelected = onSelected,
+       _enabled = enabled;
 
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<KeyDerivationAlgorithms>(
-      initialSelection: _initialSelection,
+      enabled: _enabled,
       label: const Text('Algorithm'),
+      initialSelection: _initialSelection,
       onSelected: (value) {
         if (value != null) {
-          _onSelectedTypeChanged(value);
+          _onSelected(value);
         }
       },
       dropdownMenuEntries:

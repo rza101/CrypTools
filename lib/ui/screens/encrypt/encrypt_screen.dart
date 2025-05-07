@@ -16,7 +16,7 @@ class EncryptScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24,
           children: [
-            const Text('Algorithm: AES-GCM'),
+            const Text('Currently only supports AES-GCM'),
             TextField(
               controller: _controller.keyInputController,
               decoration: InputDecoration(

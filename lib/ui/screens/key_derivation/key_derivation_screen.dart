@@ -38,7 +38,7 @@ class KeyDerivationScreen extends StatelessWidget {
             ),
             KeyDerivationAlgorithmSelector(
               initialSelection: KeyDerivationAlgorithms.bcrypt,
-              onSelectedTypeChanged: _controller.setKeyDerivationAlgorithm,
+              onSelected: _controller.setKeyDerivationAlgorithm,
             ),
             Obx(
               () => switch (_controller.keyDerivationAlgorithm) {
@@ -95,7 +95,7 @@ class KeyDerivationScreen extends StatelessWidget {
                     ),
                     HashTypeSelector(
                       initialSelection: HashAlgorithms.sha256,
-                      onSelectionChanged: _controller.setPbkdf2HashAlgorithm,
+                      onSelected: _controller.setPbkdf2HashAlgorithm,
                     ),
                   ],
                 ),

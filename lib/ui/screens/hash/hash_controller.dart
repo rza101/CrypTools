@@ -21,6 +21,9 @@ class HashController extends GetxController {
   final _isHmacMode = false.obs;
   bool get isHmacMode => _isHmacMode.value;
 
+  final _isLoading = false.obs;
+  bool get isLoading => _isLoading.value;
+
   final _selectedFile = Rx<XFile?>(null);
   XFile? get selectedFile => _selectedFile.value;
 
@@ -56,11 +59,11 @@ class HashController extends GetxController {
     super.onClose();
   }
 
-  void _hashFile() async {
+  Future<void> _hashFile() async {
     final file = selectedFile;
     final hmacKey = hmacKeyInputController.text;
 
-    hashResultController.text = '';
+    hashResultController.clear();
 
     try {
       if (file != null) {
@@ -77,7 +80,9 @@ class HashController extends GetxController {
           );
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      hashResultController.text = 'Hashing error';
+    }
   }
 
   void _hashText() {
@@ -97,7 +102,7 @@ class HashController extends GetxController {
           selectedHashAlgorithm,
         );
       } else {
-        hashResultController.text = '';
+        hashResultController.clear();
       }
     } catch (e) {
       hashResultController.text = 'Hashing error';
@@ -117,23 +122,28 @@ class HashController extends GetxController {
     hashResultController.clear();
   }
 
-  void processHash() {
+  void processHash() async {
     switch (_selectedInputType.value) {
       case InputType.text:
         _hashText();
       case InputType.file:
-        _hashFile();
+        _isLoading.value = true;
+        await _hashFile();
     }
+
+    _isLoading.value = false;
   }
 
   void setAutoHash(bool value) {
-    _isAutoHash.value = value;
-    _processHashAuto();
+    if (selectedInputType == InputType.text) {
+      _isAutoHash.value = value;
+      _processHashAuto();
+    }
   }
 
   void setHmacMode(bool value) {
     _isHmacMode.value = value;
-    _processHashAuto();
+    hashResultController.clear();
   }
 
   void setSelectedFile(XFile? file) {

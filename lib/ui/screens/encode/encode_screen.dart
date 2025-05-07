@@ -20,7 +20,7 @@ class EncodeScreen extends StatelessWidget {
           children: [
             EncodingTypeSelector(
               initialSelection: EncodingTypes.utf8,
-              onSelectedTypeChanged: _controller.setFirstEncodingType,
+              onSelected: _controller.setFirstEncodingType,
             ),
             SizedBox(
               height: 200,
@@ -52,7 +52,7 @@ class EncodeScreen extends StatelessWidget {
             ),
             EncodingTypeSelector(
               initialSelection: EncodingTypes.utf8,
-              onSelectedTypeChanged: _controller.setSecondEncodingType,
+              onSelected: _controller.setSecondEncodingType,
             ),
             SizedBox(
               height: 200,

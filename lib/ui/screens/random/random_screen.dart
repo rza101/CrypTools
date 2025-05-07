@@ -32,7 +32,7 @@ class RandomScreen extends StatelessWidget {
                 EncodingTypes.base64Url,
                 EncodingTypes.hex,
               ],
-              onSelectedTypeChanged: _controller.setEncodingType,
+              onSelected: _controller.setEncodingType,
             ),
             TextField(
               controller: _controller.byteLengthTextController,

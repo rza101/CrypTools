@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 
 class FileInputContainer extends StatefulWidget {
   final ValueChanged<XFile?> _onFileSet;
+  final bool _enabled;
 
   const FileInputContainer({
     super.key,
     required void Function(XFile?) onFileSet,
-  }) : _onFileSet = onFileSet;
+    bool enabled = true,
+  }) : _enabled = enabled,
+       _onFileSet = onFileSet;
 
   @override
   State<FileInputContainer> createState() => _FileInputContainerState();
@@ -24,7 +27,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          file == null
+          widget._enabled && file == null
               ? () async {
                 final result = await FilePicker.platform.pickFiles();
                 final resultPlatformFile = result?.files.firstOrNull;
@@ -43,7 +46,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
               }
               : null,
       child: DropTarget(
-        enable: file == null,
+        enable: widget._enabled && file == null,
         onDragDone: (details) {
           final dropItem = details.files.firstOrNull;
 
@@ -89,9 +92,12 @@ class _FileInputContainerState extends State<FileInputContainer> {
                     children: [
                       Text('Selected File: $filename'),
                       FilledButton(
-                        onPressed: () {
-                          clearFile();
-                        },
+                        onPressed:
+                            widget._enabled
+                                ? () {
+                                  clearFile();
+                                }
+                                : null,
                         style: FilledButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),

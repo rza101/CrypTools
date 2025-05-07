@@ -3,6 +3,7 @@ import 'package:cryptools/ui/screens/hash/hash_controller.dart';
 import 'package:cryptools/ui/widgets/file_input_container.dart';
 import 'package:cryptools/ui/widgets/hash_type_selector.dart';
 import 'package:cryptools/ui/widgets/input_type_selector.dart';
+import 'package:cryptools/ui/widgets/multiline_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,147 +14,189 @@ class HashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HashTypeSelector(
-              initialSelection: HashAlgorithms.md5,
-              onSelectionChanged: _controller.setSelectedHashAlgorithm,
-            ),
-            const SizedBox(height: 24),
-            Row(
-              spacing: 8,
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Input Type',
-                  style: Theme.of(context).textTheme.titleSmall,
+                HashTypeSelector(
+                  enabled: !_controller.isLoading,
+                  initialSelection: HashAlgorithms.md5,
+                  onSelected: _controller.setSelectedHashAlgorithm,
                 ),
-                Obx(
-                  () => InputTypeSelector(
-                    selectedType: _controller.selectedInputType,
-                    onSelectedTypeChanged: _controller.setSelectedInputType,
-                  ),
-                ),
+                const SizedBox(height: 24),
+                _InputTypeForm(controller: _controller),
+                const SizedBox(height: 24),
+                _HmacModeForm(controller: _controller),
+                const SizedBox(height: 24),
+                _AutoHashForm(controller: _controller),
+                const SizedBox(height: 24),
+                _PlaintextForm(controller: _controller),
+                _HmacKeyForm(controller: _controller),
+                const SizedBox(height: 24),
+                _ResultForm(controller: _controller),
               ],
             ),
-            const SizedBox(height: 24),
-            Row(
-              spacing: 4,
-              children: [
-                Text(
-                  'HMAC Mode',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                Obx(
-                  () => Switch(
-                    value: _controller.isHmacMode,
-                    onChanged: _controller.setHmacMode,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Row(
-              spacing: 4,
-              children: [
-                Text(
-                  'Auto Hash',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                Obx(
-                  () => Switch(
-                    value:
-                        _controller.isAutoHash &&
-                        _controller.selectedInputType == InputType.text,
-                    onChanged:
-                        _controller.selectedInputType == InputType.text
-                            ? _controller.setAutoHash
-                            : null,
-                  ),
-                ),
-                Obx(
-                  () => FilledButton(
-                    onPressed:
-                        !_controller.isAutoHash ||
-                                _controller.selectedInputType == InputType.file
-                            ? _controller.processHash
-                            : null,
-                    child: Text('Hash'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Obx(
-              () => SizedBox(
-                height: 200,
-                child: switch (_controller.selectedInputType) {
-                  InputType.text => TextField(
-                    controller: _controller.textInputController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Plaintext',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                    expands: true,
-                    minLines: null,
-                    maxLines: null,
-                    textAlignVertical: TextAlignVertical.top,
-                  ),
-                  InputType.file => FileInputContainer(
-                    onFileSet: _controller.setSelectedFile,
-                  ),
-                },
-              ),
-            ),
-            Obx(
-              () =>
-                  _controller.isHmacMode
-                      ? Padding(
-                        padding: const EdgeInsets.only(top: 24),
-                        child: SizedBox(
-                          height: 200,
-                          child: TextField(
-                            controller: _controller.hmacKeyInputController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'HMAC Key',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                            ),
-                            enabled: _controller.isHmacMode,
-                            expands: true,
-                            minLines: null,
-                            maxLines: null,
-                            textAlignVertical: TextAlignVertical.top,
-                          ),
-                        ),
-                      )
-                      : const SizedBox.shrink(),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              height: 200,
-              child: TextField(
-                controller: _controller.hashResultController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Hash Result',
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-                expands: true,
-                minLines: null,
-                maxLines: null,
-                readOnly: true,
-                textAlignVertical: TextAlignVertical.top,
-              ),
-            ),
-          ],
+          ),
         ),
+        if (_controller.isLoading)
+          Expanded(child: Center(child: CircularProgressIndicator())),
+      ],
+    );
+  }
+}
+
+class _InputTypeForm extends StatelessWidget {
+  const _InputTypeForm({required HashController controller})
+    : _controller = controller;
+
+  final HashController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 8,
+      children: [
+        Text('Input Type', style: Theme.of(context).textTheme.titleSmall),
+        Obx(
+          () => InputTypeSelector(
+            selectedType: _controller.selectedInputType,
+            onSelectedTypeChanged: _controller.setSelectedInputType,
+            enabled: !_controller.isLoading,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HmacModeForm extends StatelessWidget {
+  const _HmacModeForm({required HashController controller})
+    : _controller = controller;
+
+  final HashController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 4,
+      children: [
+        Text('HMAC Mode', style: Theme.of(context).textTheme.titleSmall),
+        Obx(
+          () => Switch(
+            value: _controller.isHmacMode,
+            onChanged: _controller.isLoading ? null : _controller.setHmacMode,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AutoHashForm extends StatelessWidget {
+  const _AutoHashForm({required HashController controller})
+    : _controller = controller;
+
+  final HashController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 4,
+      children: [
+        Text('Auto Hash', style: Theme.of(context).textTheme.titleSmall),
+        Obx(
+          () => Switch(
+            value:
+                !_controller.isLoading &&
+                _controller.isAutoHash &&
+                _controller.selectedInputType == InputType.text,
+            onChanged: !_controller.isLoading ? _controller.setAutoHash : null,
+          ),
+        ),
+        Obx(
+          () => FilledButton(
+            onPressed:
+                !_controller.isLoading &&
+                        (!_controller.isAutoHash ||
+                            _controller.selectedInputType == InputType.file)
+                    ? _controller.processHash
+                    : null,
+            child: Text('Hash'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PlaintextForm extends StatelessWidget {
+  const _PlaintextForm({required HashController controller})
+    : _controller = controller;
+
+  final HashController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => SizedBox(
+        height: 200,
+        child: switch (_controller.selectedInputType) {
+          InputType.text => MultilineTextField(
+            controller: _controller.textInputController,
+            labelText: 'Plaintext',
+            enabled: !_controller.isLoading,
+          ),
+          InputType.file => FileInputContainer(
+            onFileSet: _controller.setSelectedFile,
+            enabled: !_controller.isLoading,
+          ),
+        },
       ),
+    );
+  }
+}
+
+class _HmacKeyForm extends StatelessWidget {
+  const _HmacKeyForm({required HashController controller})
+    : _controller = controller;
+
+  final HashController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () =>
+          _controller.isHmacMode
+              ? Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: MultilineTextField(
+                  controller: _controller.hmacKeyInputController,
+                  labelText: 'HMAC Key',
+                  enabled: !_controller.isLoading && _controller.isHmacMode,
+                ),
+              )
+              : const SizedBox.shrink(),
+    );
+  }
+}
+
+class _ResultForm extends StatelessWidget {
+  const _ResultForm({required HashController controller})
+    : _controller = controller;
+
+  final HashController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultilineTextField(
+      controller: _controller.hashResultController,
+      labelText: 'Hash Result',
+      enabled: !_controller.isLoading,
+      readOnly: true,
     );
   }
 }
