@@ -34,7 +34,7 @@ class HashScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 _AutoHashForm(controller: _controller),
                 const SizedBox(height: 24),
-                _PlaintextForm(controller: _controller),
+                _InputDataForm(controller: _controller),
                 _HmacKeyForm(controller: _controller),
                 const SizedBox(height: 24),
                 _ResultForm(controller: _controller),
@@ -133,8 +133,8 @@ class _AutoHashForm extends StatelessWidget {
   }
 }
 
-class _PlaintextForm extends StatelessWidget {
-  const _PlaintextForm({required HashController controller})
+class _InputDataForm extends StatelessWidget {
+  const _InputDataForm({required HashController controller})
     : _controller = controller;
 
   final HashController _controller;

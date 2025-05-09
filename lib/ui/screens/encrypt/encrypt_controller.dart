@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cryptools/core/crypto/crypto_encode_service.dart';
 import 'package:cryptools/core/crypto/crypto_encrypt_service.dart';
 import 'package:cryptools/core/crypto/crypto_random_service.dart';
+import 'package:cryptools/core/helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +17,14 @@ class EncryptController extends GetxController {
   final ciphertextController = TextEditingController();
   final plaintextController = TextEditingController();
 
+  final keyFormKey = GlobalKey<FormFieldState>();
+  final nonceFormKey = GlobalKey<FormFieldState>();
+  final plaintextFormKey = GlobalKey<FormFieldState>();
+  final ciphertextFormKey = GlobalKey<FormFieldState>();
+
+  final _isLoading = false.obs;
+  bool get isLoading => _isLoading.value;
+
   EncryptController({
     required CryptoRandomService randomService,
     required CryptoEncryptService encryptService,
@@ -24,76 +34,64 @@ class EncryptController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    generateRandomKey();
+    generateKey();
     generateNonce();
   }
 
   void aesEncrypt() {
-    late Uint8List key;
-    late Uint8List nonce;
-
-    try {
-      key = base64.decode(keyInputController.text);
-      assert([128, 192, 256].contains(key.length * 8));
-    } catch (e) {
-      ciphertextController.text =
-          'Key must be in Base64 with 128, 192, or 256 bits length';
+    if (keyFormKey.currentState?.validate() != true ||
+        nonceFormKey.currentState?.validate() != true ||
+        plaintextFormKey.currentState?.validate() != true) {
       return;
     }
 
     try {
-      nonce = base64.decode(nonceInputController.text);
-      assert(nonce.length * 8 == 96);
-    } catch (e) {
-      ciphertextController.text = 'Nonce must be in Base64 with 96 bits length';
-      return;
-    }
+      final Uint8List key = base64.decode(keyInputController.text);
+      final Uint8List nonce = base64.decode(nonceInputController.text);
+      final Uint8List plaintext = utf8.encode(plaintextController.text);
 
-    try {
       ciphertextController.text = base64.encode(
         _encryptService.aesEncrypt(
           key: key,
           nonce: nonce,
-          plaintext: utf8.encode(plaintextController.text),
+          plaintext: plaintext,
         ),
       );
+      ciphertextFormKey.currentState?.validate();
     } catch (e) {
       ciphertextController.text = 'Encryption failed';
     }
   }
 
   void aesDecrypt() {
-    late Uint8List key;
-    late Uint8List nonce;
-
-    try {
-      key = base64.decode(keyInputController.text);
-      assert([128, 192, 256].contains(key.length * 8));
-    } catch (e) {
-      plaintextController.text =
-          'Key must be in Base64 with 128, 192, or 256 bits length';
+    if (keyFormKey.currentState?.validate() != true ||
+        nonceFormKey.currentState?.validate() != true ||
+        ciphertextFormKey.currentState?.validate() != true) {
       return;
     }
 
     try {
-      nonce = base64.decode(nonceInputController.text);
-      assert(nonce.length * 8 == 96);
-    } catch (e) {
-      plaintextController.text = 'Nonce must be in Base64 with 96 bits length';
-      return;
-    }
+      final Uint8List key = base64.decode(keyInputController.text);
+      final Uint8List nonce = base64.decode(nonceInputController.text);
+      final Uint8List ciphertext = base64.decode(ciphertextController.text);
 
-    try {
       plaintextController.text = utf8.decode(
         _encryptService.aesDecrypt(
           key: key,
           nonce: nonce,
-          ciphertext: base64.decode(ciphertextController.text),
+          ciphertext: ciphertext,
         ),
       );
+      plaintextFormKey.currentState?.validate();
     } catch (e) {
       plaintextController.text = 'Decryption failed';
     }
+  }
+
+  void generateKey() {
+    keyInputController.text = base64.encode(
+      _randomService.generateRandomBytes(32),
+    );
   }
 
   void generateNonce() {
@@ -102,9 +100,51 @@ class EncryptController extends GetxController {
     );
   }
 
-  void generateRandomKey() {
-    keyInputController.text = base64.encode(
-      _randomService.generateRandomBytes(32),
-    );
+  String? validateKey(String? value) {
+    if (value != null) {
+      if (!validateEncoding(value, EncodingTypes.base64)) {
+        return 'Key must be in Base64';
+      } else if (![16, 24, 32].contains(base64.decode(value).length)) {
+        return 'Key length must be 128, 192, or 256 bits';
+      } else {
+        return null;
+      }
+    } else {
+      return 'Key cannot be empty';
+    }
+  }
+
+  String? validateNonce(String? value) {
+    if (value != null) {
+      if (!validateEncoding(value, EncodingTypes.base64)) {
+        return 'Nonce must be in Base64';
+      } else if (base64.decode(value).length != 12) {
+        return 'Nonce length must be 192 bits';
+      } else {
+        return null;
+      }
+    } else {
+      return 'Nonce cannot be empty';
+    }
+  }
+
+  String? validatePlaintext(String? value) {
+    if (value != null && value.isNotEmpty) {
+      return null;
+    } else {
+      return 'Plaintext cannot be empty';
+    }
+  }
+
+  String? validateCiphertext(String? value) {
+    if (value != null && value.isNotEmpty) {
+      if (!validateEncoding(value, EncodingTypes.base64)) {
+        return 'Ciphertext must be in Base64';
+      } else {
+        return null;
+      }
+    } else {
+      return 'Ciphertext cannot be empty';
+    }
   }
 }

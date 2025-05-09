@@ -4,11 +4,6 @@ import 'dart:typed_data';
 import 'package:cryptools/core/crypto/crypto_encode_service.dart';
 
 class DefaultCryptoEncodeService implements CryptoEncodeService {
-  static final asciiRegex = RegExp(r'^[\x00-\x7F]*$');
-  static final base64Regex = RegExp(r'^[A-Za-z0-9+/]*={0,2}$');
-  static final base64UrlRegex = RegExp(r'^[A-Za-z0-9\-_]*={0,2}$');
-  static final hexRegex = RegExp(r'^[0-9a-fA-F]*$');
-
   @override
   Uint8List convertToByteArray(String data, EncodingTypes encoding) {
     final Uint8List result;
@@ -45,22 +40,6 @@ class DefaultCryptoEncodeService implements CryptoEncodeService {
 
       EncodingTypes.hex =>
         bytes.map((value) => value.toRadixString(16).padLeft(2, '0')).join(),
-    };
-  }
-
-  static bool validateEncoding(String data, EncodingTypes encoding) {
-    return switch (encoding) {
-      EncodingTypes.utf8 => true,
-
-      EncodingTypes.ascii => asciiRegex.hasMatch(data),
-
-      EncodingTypes.base64 =>
-        data.length % 4 == 0 && base64Regex.hasMatch(data),
-
-      EncodingTypes.base64Url =>
-        data.length % 4 == 0 && base64UrlRegex.hasMatch(data),
-
-      EncodingTypes.hex => data.length % 2 == 0 && hexRegex.hasMatch(data),
     };
   }
 }
