@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 class EncodeController extends GetxController {
   final CryptoEncodeService _encodeService;
 
-  final firstInputController = TextEditingController();
-  final secondInputController = TextEditingController();
+  final firstInputTextController = TextEditingController();
+  final secondInputTextController = TextEditingController();
 
   final _firstEncodingType = EncodingTypes.utf8.obs;
   EncodingTypes get firstEncodingType => _firstEncodingType.value;
@@ -19,29 +19,29 @@ class EncodeController extends GetxController {
 
   void processFirstInput() {
     try {
-      secondInputController.text = _encodeService.convertToEncoding(
+      secondInputTextController.text = _encodeService.convertToEncoding(
         _encodeService.convertToByteArray(
-          firstInputController.text,
+          firstInputTextController.text,
           firstEncodingType,
         ),
         secondEncodingType,
       );
     } catch (e) {
-      secondInputController.text = 'Invalid first input';
+      secondInputTextController.text = 'Invalid first input';
     }
   }
 
   void processSecondInput() {
     try {
-      firstInputController.text = _encodeService.convertToEncoding(
+      firstInputTextController.text = _encodeService.convertToEncoding(
         _encodeService.convertToByteArray(
-          secondInputController.text,
+          secondInputTextController.text,
           secondEncodingType,
         ),
         firstEncodingType,
       );
     } catch (e) {
-      firstInputController.text = 'Invalid second input';
+      firstInputTextController.text = 'Invalid second input';
     }
   }
 

@@ -40,7 +40,7 @@ class _KeyForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       key: _controller.keyFormKey,
-      controller: _controller.keyInputController,
+      controller: _controller.keyTextController,
       decoration: InputDecoration(
         labelText:
             'Key (128/192/256 bits in Base64, random generated key = 256 bits)',
@@ -70,7 +70,7 @@ class _NonceForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       key: _controller.nonceFormKey,
-      controller: _controller.nonceInputController,
+      controller: _controller.nonceTextController,
       decoration: InputDecoration(
         labelText: 'Nonce (192 bits in Base64)',
         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -101,7 +101,7 @@ class _PlaintextForm extends StatelessWidget {
       height: 200,
       child: MultilineTextField(
         formFieldKey: _controller.plaintextFormKey,
-        controller: _controller.plaintextController,
+        controller: _controller.plaintextTextController,
         labelText: 'Plaintext (UTF-8)',
         validator: _controller.validatePlaintext,
       ),
@@ -146,7 +146,7 @@ class _CiphertextForm extends StatelessWidget {
       height: 200,
       child: MultilineTextField(
         formFieldKey: _controller.ciphertextFormKey,
-        controller: _controller.ciphertextController,
+        controller: _controller.ciphertextTextController,
         labelText: 'Ciphertext (Base64)',
         validator: _controller.validateCiphertext,
       ),

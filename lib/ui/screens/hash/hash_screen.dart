@@ -146,7 +146,7 @@ class _InputDataForm extends StatelessWidget {
         height: 200,
         child: switch (_controller.selectedInputType) {
           InputType.text => MultilineTextField(
-            controller: _controller.textInputController,
+            controller: _controller.plaintextTextController,
             labelText: 'Plaintext',
             enabled: !_controller.isLoading,
           ),
@@ -174,7 +174,7 @@ class _HmacKeyForm extends StatelessWidget {
               ? Padding(
                 padding: const EdgeInsets.only(top: 24),
                 child: MultilineTextField(
-                  controller: _controller.hmacKeyInputController,
+                  controller: _controller.hmacKeyTextController,
                   labelText: 'HMAC Key',
                   enabled: !_controller.isLoading && _controller.isHmacMode,
                 ),
@@ -193,7 +193,7 @@ class _ResultForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultilineTextField(
-      controller: _controller.hashResultController,
+      controller: _controller.hashResultTextController,
       labelText: 'Hash Result',
       enabled: !_controller.isLoading,
       readOnly: true,

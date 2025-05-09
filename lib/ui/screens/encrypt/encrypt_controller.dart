@@ -12,10 +12,10 @@ class EncryptController extends GetxController {
   final CryptoRandomService _randomService;
   final CryptoEncryptService _encryptService;
 
-  final keyInputController = TextEditingController();
-  final nonceInputController = TextEditingController();
-  final ciphertextController = TextEditingController();
-  final plaintextController = TextEditingController();
+  final keyTextController = TextEditingController();
+  final nonceTextController = TextEditingController();
+  final plaintextTextController = TextEditingController();
+  final ciphertextTextController = TextEditingController();
 
   final keyFormKey = GlobalKey<FormFieldState>();
   final nonceFormKey = GlobalKey<FormFieldState>();
@@ -46,11 +46,11 @@ class EncryptController extends GetxController {
     }
 
     try {
-      final Uint8List key = base64.decode(keyInputController.text);
-      final Uint8List nonce = base64.decode(nonceInputController.text);
-      final Uint8List plaintext = utf8.encode(plaintextController.text);
+      final Uint8List key = base64.decode(keyTextController.text);
+      final Uint8List nonce = base64.decode(nonceTextController.text);
+      final Uint8List plaintext = utf8.encode(plaintextTextController.text);
 
-      ciphertextController.text = base64.encode(
+      ciphertextTextController.text = base64.encode(
         _encryptService.aesEncrypt(
           key: key,
           nonce: nonce,
@@ -59,7 +59,7 @@ class EncryptController extends GetxController {
       );
       ciphertextFormKey.currentState?.validate();
     } catch (e) {
-      ciphertextController.text = 'Encryption failed';
+      ciphertextTextController.text = 'Encryption failed';
     }
   }
 
@@ -71,11 +71,11 @@ class EncryptController extends GetxController {
     }
 
     try {
-      final Uint8List key = base64.decode(keyInputController.text);
-      final Uint8List nonce = base64.decode(nonceInputController.text);
-      final Uint8List ciphertext = base64.decode(ciphertextController.text);
+      final Uint8List key = base64.decode(keyTextController.text);
+      final Uint8List nonce = base64.decode(nonceTextController.text);
+      final Uint8List ciphertext = base64.decode(ciphertextTextController.text);
 
-      plaintextController.text = utf8.decode(
+      plaintextTextController.text = utf8.decode(
         _encryptService.aesDecrypt(
           key: key,
           nonce: nonce,
@@ -84,18 +84,18 @@ class EncryptController extends GetxController {
       );
       plaintextFormKey.currentState?.validate();
     } catch (e) {
-      plaintextController.text = 'Decryption failed';
+      plaintextTextController.text = 'Decryption failed';
     }
   }
 
   void generateKey() {
-    keyInputController.text = base64.encode(
+    keyTextController.text = base64.encode(
       _randomService.generateRandomBytes(32),
     );
   }
 
   void generateNonce() {
-    nonceInputController.text = base64.encode(
+    nonceTextController.text = base64.encode(
       _randomService.generateRandomBytes(12),
     );
   }

@@ -11,9 +11,9 @@ class HashController extends GetxController {
   final CryptoHashService _hashService;
   final CryptoHMACService _hmacService;
 
-  final hashResultController = TextEditingController();
-  final hmacKeyInputController = TextEditingController();
-  final textInputController = TextEditingController();
+  final plaintextTextController = TextEditingController();
+  final hmacKeyTextController = TextEditingController();
+  final hashResultTextController = TextEditingController();
 
   final _isAutoHash = true.obs;
   bool get isAutoHash => _isAutoHash.value;
@@ -42,70 +42,70 @@ class HashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    textInputController.addListener(() {
+    plaintextTextController.addListener(() {
       _processHashAuto();
     });
-    hmacKeyInputController.addListener(() {
+    hmacKeyTextController.addListener(() {
       _processHashAuto();
     });
   }
 
   @override
   void onClose() {
-    hashResultController.dispose();
-    hmacKeyInputController.dispose();
-    textInputController.dispose();
+    hashResultTextController.dispose();
+    hmacKeyTextController.dispose();
+    plaintextTextController.dispose();
 
     super.onClose();
   }
 
   Future<void> _hashFile() async {
     final file = selectedFile;
-    final hmacKey = hmacKeyInputController.text;
+    final hmacKey = hmacKeyTextController.text;
 
-    hashResultController.clear();
+    hashResultTextController.clear();
 
     try {
       if (file != null) {
         if (isHmacMode && hmacKey.isNotEmpty) {
-          hashResultController.text = await _hmacService.hmacFile(
+          hashResultTextController.text = await _hmacService.hmacFile(
             algorithm: selectedHashAlgorithm,
             key: utf8.encode(hmacKey),
             file: file,
           );
         } else if (!isHmacMode) {
-          hashResultController.text = await _hashService.hashFile(
+          hashResultTextController.text = await _hashService.hashFile(
             file,
             selectedHashAlgorithm,
           );
         }
       }
     } catch (e) {
-      hashResultController.text = 'Hashing error';
+      hashResultTextController.text = 'Hashing error';
     }
   }
 
   void _hashText() {
-    final text = textInputController.text;
-    final hmacKey = hmacKeyInputController.text;
+    final text = plaintextTextController.text;
+    final hmacKey = hmacKeyTextController.text;
 
     try {
       if (text.isNotEmpty && isHmacMode && hmacKey.isNotEmpty) {
-        hashResultController.text = _hmacService.hmacBytes(
+        hashResultTextController.text = _hmacService.hmacBytes(
           algorithm: selectedHashAlgorithm,
           key: utf8.encode(hmacKey),
           bytes: utf8.encode(text),
         );
       } else if (text.isNotEmpty && !isHmacMode) {
-        hashResultController.text = _hashService.hashBytes(
+        hashResultTextController.text = _hashService.hashBytes(
           utf8.encode(text),
           selectedHashAlgorithm,
         );
       } else {
-        hashResultController.clear();
+        hashResultTextController.clear();
       }
     } catch (e) {
-      hashResultController.text = 'Hashing error';
+      hashResultTextController.text = 'Hashing error';
     }
   }
 
@@ -117,9 +117,9 @@ class HashController extends GetxController {
 
   void clearForm() {
     _selectedFile.value = null;
-    textInputController.clear();
-    hmacKeyInputController.clear();
-    hashResultController.clear();
+    plaintextTextController.clear();
+    hmacKeyTextController.clear();
+    hashResultTextController.clear();
   }
 
   void processHash() async {
@@ -143,7 +143,7 @@ class HashController extends GetxController {
 
   void setHmacMode(bool value) {
     _isHmacMode.value = value;
-    hashResultController.clear();
+    hashResultTextController.clear();
   }
 
   void setSelectedFile(XFile? file) {

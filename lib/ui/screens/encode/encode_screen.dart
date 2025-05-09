@@ -22,57 +22,86 @@ class EncodeScreen extends StatelessWidget {
               initialSelection: EncodingTypes.utf8,
               onSelected: _controller.setFirstEncodingType,
             ),
-            SizedBox(
-              height: 200,
-              child: TextField(
-                controller: _controller.firstInputController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-                expands: true,
-                minLines: null,
-                maxLines: null,
-                onChanged: (value) {
-                  _controller.processFirstInput();
-                },
-                textAlignVertical: TextAlignVertical.top,
-              ),
-            ),
-            Row(
-              children: [
-                const Expanded(child: Divider()),
-                Icon(
-                  Icons.swap_vert,
-                  color: Theme.of(context).dividerColor,
-                  size: 40,
-                ),
-                const Expanded(child: Divider()),
-              ],
-            ),
+            _FirstInputForm(controller: _controller),
+            _Divider(),
             EncodingTypeSelector(
               initialSelection: EncodingTypes.utf8,
               onSelected: _controller.setSecondEncodingType,
             ),
-            SizedBox(
-              height: 200,
-              child: TextField(
-                controller: _controller.secondInputController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-                expands: true,
-                minLines: null,
-                maxLines: null,
-                onChanged: (value) {
-                  _controller.processSecondInput();
-                },
-                textAlignVertical: TextAlignVertical.top,
-              ),
-            ),
+            _SecondInputForm(controller: _controller),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _FirstInputForm extends StatelessWidget {
+  const _FirstInputForm({required EncodeController controller})
+    : _controller = controller;
+
+  final EncodeController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: TextField(
+        controller: _controller.firstInputTextController,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        expands: true,
+        minLines: null,
+        maxLines: null,
+        onChanged: (value) {
+          _controller.processFirstInput();
+        },
+        textAlignVertical: TextAlignVertical.top,
+      ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  const _Divider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Expanded(child: Divider()),
+        Icon(Icons.swap_vert, color: Theme.of(context).dividerColor, size: 40),
+        const Expanded(child: Divider()),
+      ],
+    );
+  }
+}
+
+class _SecondInputForm extends StatelessWidget {
+  const _SecondInputForm({required EncodeController controller})
+    : _controller = controller;
+
+  final EncodeController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: TextField(
+        controller: _controller.secondInputTextController,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        expands: true,
+        minLines: null,
+        maxLines: null,
+        onChanged: (value) {
+          _controller.processSecondInput();
+        },
+        textAlignVertical: TextAlignVertical.top,
       ),
     );
   }
