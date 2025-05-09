@@ -22,52 +22,9 @@ class RandomScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24,
           children: [
-            EncodingTypeSelector(
-              initialSelection: EncodingTypes.hex,
-              entries: const [
-                // ascii and utf8 encoding output (for printable characters)
-                // requires more processing to ensure uniform distribution
-                // for example: rejection sampling
-                EncodingTypes.base64,
-                EncodingTypes.base64Url,
-                EncodingTypes.hex,
-              ],
-              onSelected: _controller.setEncodingType,
-            ),
-            TextField(
-              controller: _controller.byteLengthTextController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Length (bytes)',
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-              ),
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              keyboardType: TextInputType.number,
-              maxLines: 1,
-            ),
-            SizedBox(
-              height: 200,
-              child: TextField(
-                controller: _controller.outputTextController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: 'Result',
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon:
-                      isWideScreen
-                          ? null
-                          : IconButton(
-                            onPressed: _controller.generateRandomValue,
-                            icon: Icon(Icons.refresh),
-                          ),
-                ),
-                expands: true,
-                minLines: null,
-                maxLines: null,
-                readOnly: true,
-                textAlignVertical: TextAlignVertical.top,
-              ),
-            ),
+            _EncodingTypeForm(controller: _controller),
+            _ByteLengthForm(controller: _controller),
+            _ResultField(controller: _controller, isWideScreen: isWideScreen),
             if (isWideScreen)
               FilledButton(
                 onPressed: _controller.generateRandomValue,
@@ -75,6 +32,91 @@ class RandomScreen extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _EncodingTypeForm extends StatelessWidget {
+  const _EncodingTypeForm({required RandomController controller})
+    : _controller = controller;
+
+  final RandomController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return EncodingTypeSelector(
+      initialSelection: EncodingTypes.hex,
+      entries: const [
+        // ascii and utf8 encoding output (for printable characters)
+        // requires more processing to ensure uniform distribution
+        // for example: rejection sampling
+        EncodingTypes.base64,
+        EncodingTypes.base64Url,
+        EncodingTypes.hex,
+      ],
+      onSelected: _controller.setEncodingType,
+    );
+  }
+}
+
+class _ByteLengthForm extends StatelessWidget {
+  const _ByteLengthForm({required RandomController controller})
+    : _controller = controller;
+
+  final RandomController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      key: _controller.byteLengthFormKey,
+      controller: _controller.byteLengthTextController,
+      decoration: const InputDecoration(
+        labelText: 'Length (bytes)',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      maxLines: 1,
+      validator: _controller.validateByteLength,
+      autovalidateMode: AutovalidateMode.always,
+    );
+  }
+}
+
+class _ResultField extends StatelessWidget {
+  const _ResultField({
+    required RandomController controller,
+    required this.isWideScreen,
+  }) : _controller = controller;
+
+  final RandomController _controller;
+  final bool isWideScreen;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: TextField(
+        controller: _controller.outputTextController,
+        decoration: InputDecoration(
+          labelText: 'Result',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon:
+              isWideScreen
+                  ? null
+                  : IconButton(
+                    onPressed: _controller.generateRandomValue,
+                    icon: Icon(Icons.refresh),
+                  ),
+          border: const OutlineInputBorder(),
+        ),
+        textAlignVertical: TextAlignVertical.top,
+        readOnly: true,
+        maxLines: null,
+        minLines: null,
+        expands: true,
       ),
     );
   }

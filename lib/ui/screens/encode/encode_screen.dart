@@ -49,16 +49,16 @@ class _FirstInputForm extends StatelessWidget {
       child: TextField(
         controller: _controller.firstInputTextController,
         decoration: const InputDecoration(
-          border: OutlineInputBorder(),
           floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: OutlineInputBorder(),
         ),
-        expands: true,
-        minLines: null,
+        textAlignVertical: TextAlignVertical.top,
         maxLines: null,
+        minLines: null,
+        expands: true,
         onChanged: (value) {
           _controller.processFirstInput();
         },
-        textAlignVertical: TextAlignVertical.top,
       ),
     );
   }
@@ -92,16 +92,16 @@ class _SecondInputForm extends StatelessWidget {
       child: TextField(
         controller: _controller.secondInputTextController,
         decoration: const InputDecoration(
-          border: OutlineInputBorder(),
           floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: OutlineInputBorder(),
         ),
-        expands: true,
-        minLines: null,
+        textAlignVertical: TextAlignVertical.top,
         maxLines: null,
+        minLines: null,
+        expands: true,
         onChanged: (value) {
           _controller.processSecondInput();
         },
-        textAlignVertical: TextAlignVertical.top,
       ),
     );
   }

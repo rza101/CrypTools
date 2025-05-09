@@ -11,6 +11,8 @@ class RandomController extends GetxController {
   final byteLengthTextController = TextEditingController();
   final outputTextController = TextEditingController();
 
+  final byteLengthFormKey = GlobalKey<FormFieldState>();
+
   final _encodingType = EncodingTypes.ascii.obs;
 
   var _randomBytes = Uint8List(0);
@@ -45,10 +47,12 @@ class RandomController extends GetxController {
 
   void generateRandomValue() {
     try {
-      _randomBytes = _randomService.generateRandomBytes(
-        int.tryParse(byteLengthTextController.text) ?? 0,
-      );
-      formatRandomValue();
+      if (byteLengthFormKey.currentState?.validate() == true) {
+        _randomBytes = _randomService.generateRandomBytes(
+          int.tryParse(byteLengthTextController.text) ?? 0,
+        );
+        formatRandomValue();
+      }
     } catch (e) {
       outputTextController.text = 'Failed to generate random value';
     }
@@ -57,5 +61,17 @@ class RandomController extends GetxController {
   void setEncodingType(EncodingTypes encoding) {
     _encodingType.value = encoding;
     formatRandomValue();
+  }
+
+  String? validateByteLength(String? value) {
+    if (value != null && value.isNotEmpty) {
+      if (value.isNumericOnly) {
+        return null;
+      } else {
+        return 'Length must be a number';
+      }
+    } else {
+      return 'Length cannot be empty';
+    }
   }
 }
