@@ -12,6 +12,8 @@ class KeygenController extends GetxController {
   final publicKeyOutputController = TextEditingController();
   final privateKeyOutputController = TextEditingController();
 
+  final keyLengthFormKey = GlobalKey<FormFieldState>();
+
   KeygenController({
     required CryptoKeygenService keygenService,
     required CryptoRandomService randomService,
@@ -25,15 +27,12 @@ class KeygenController extends GetxController {
   }
 
   void generateKey() async {
-    final keyLength = int.tryParse(rsaKeyLengthInputController.text);
-
-    if (keyLength == null) {
-      publicKeyOutputController.text = 'Invalid key length';
-      privateKeyOutputController.text = 'Invalid key length';
-      return;
-    }
-
     try {
+      if (keyLengthFormKey.currentState?.validate() != true) {
+        return;
+      }
+
+      final keyLength = int.parse(rsaKeyLengthInputController.text);
       final keyPair = await _keygenService.generateRSAKeyPair(
         keyLength,
         _randomService.generateFortunaRandomInstance(),
@@ -44,6 +43,23 @@ class KeygenController extends GetxController {
     } catch (e) {
       publicKeyOutputController.text = 'Key generation failed';
       privateKeyOutputController.text = 'Key generation failed';
+      e.printError();
     }
+  }
+
+  String? validateKeyLength(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Key length cannot be empty';
+    }
+
+    if (!value.isNumericOnly) {
+      return 'Key length must be a number';
+    }
+
+    if (int.parse(value) < 512) {
+      return 'Key length must be bigger than 512';
+    }
+
+    return null;
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+// TODO loading progress
 class KeygenScreen extends StatelessWidget {
   final KeygenController _controller = Get.find();
 
@@ -11,39 +12,6 @@ class KeygenScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final publicKeyTextField = SizedBox(
-      height: 200,
-      child: TextField(
-        controller: _controller.publicKeyOutputController,
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Public Key',
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-        ),
-        expands: true,
-        minLines: null,
-        maxLines: null,
-        readOnly: true,
-        textAlignVertical: TextAlignVertical.top,
-      ),
-    );
-    final privateKeyTextField = SizedBox(
-      height: 200,
-      child: TextField(
-        controller: _controller.privateKeyOutputController,
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Private Key',
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-        ),
-        expands: true,
-        minLines: null,
-        maxLines: null,
-        readOnly: true,
-        textAlignVertical: TextAlignVertical.top,
-      ),
-    );
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -52,29 +20,22 @@ class KeygenScreen extends StatelessWidget {
           spacing: 24,
           children: [
             Text('Currently only supports RSA key'),
-            TextField(
-              controller: _controller.rsaKeyLengthInputController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Key Length (bits)',
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-              ),
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              keyboardType: TextInputType.number,
-              maxLines: 1,
-            ),
+            _KeyLengthField(controller: _controller),
             context.isWideScreen()
                 ? Row(
                   spacing: 24,
                   children: [
-                    Expanded(child: publicKeyTextField),
-                    Expanded(child: privateKeyTextField),
+                    Expanded(child: _PublicKeyField(controller: _controller)),
+                    Expanded(child: _PrivateKeyField(controller: _controller)),
                   ],
                 )
                 : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 24,
-                  children: [publicKeyTextField, privateKeyTextField],
+                  children: [
+                    _PublicKeyField(controller: _controller),
+                    _PrivateKeyField(controller: _controller),
+                  ],
                 ),
             FilledButton(
               onPressed: _controller.generateKey,
@@ -82,6 +43,85 @@ class KeygenScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _KeyLengthField extends StatelessWidget {
+  const _KeyLengthField({required KeygenController controller})
+    : _controller = controller;
+
+  final KeygenController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      key: _controller.keyLengthFormKey,
+      controller: _controller.rsaKeyLengthInputController,
+      decoration: const InputDecoration(
+        labelText: 'Key Length (bits)',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.number,
+      maxLines: 1,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      validator: _controller.validateKeyLength,
+      autovalidateMode: AutovalidateMode.always,
+    );
+  }
+}
+
+class _PublicKeyField extends StatelessWidget {
+  const _PublicKeyField({required KeygenController controller})
+    : _controller = controller;
+
+  final KeygenController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: TextField(
+        controller: _controller.publicKeyOutputController,
+        decoration: const InputDecoration(
+          labelText: 'Public Key',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: OutlineInputBorder(),
+        ),
+        textAlignVertical: TextAlignVertical.top,
+        readOnly: true,
+        maxLines: null,
+        minLines: null,
+        expands: true,
+      ),
+    );
+  }
+}
+
+class _PrivateKeyField extends StatelessWidget {
+  const _PrivateKeyField({required KeygenController controller})
+    : _controller = controller;
+
+  final KeygenController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: TextField(
+        controller: _controller.privateKeyOutputController,
+        decoration: const InputDecoration(
+          labelText: 'Private Key',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: OutlineInputBorder(),
+        ),
+        textAlignVertical: TextAlignVertical.top,
+        readOnly: true,
+        maxLines: null,
+        minLines: null,
+        expands: true,
       ),
     );
   }
