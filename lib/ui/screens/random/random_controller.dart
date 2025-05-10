@@ -64,14 +64,14 @@ class RandomController extends GetxController {
   }
 
   String? validateByteLength(String? value) {
-    if (value != null && value.isNotEmpty) {
-      if (value.isNumericOnly) {
-        return null;
-      } else {
-        return 'Length must be a number';
-      }
-    } else {
+    if (value == null || value.isEmpty) {
       return 'Length cannot be empty';
     }
+
+    if (!value.isNumericOnly) {
+      return 'Length must be a number';
+    }
+
+    return null;
   }
 }

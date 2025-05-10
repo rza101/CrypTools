@@ -101,50 +101,54 @@ class EncryptController extends GetxController {
   }
 
   String? validateKey(String? value) {
-    if (value != null) {
-      if (!validateEncoding(value, EncodingTypes.base64)) {
-        return 'Key must be in Base64';
-      } else if (![16, 24, 32].contains(base64.decode(value).length)) {
-        return 'Key length must be 128, 192, or 256 bits';
-      } else {
-        return null;
-      }
-    } else {
+    if (value == null || value.isEmpty) {
       return 'Key cannot be empty';
     }
+
+    if (!validateEncoding(value, EncodingTypes.base64)) {
+      return 'Key must be in Base64';
+    }
+
+    if (![16, 24, 32].contains(base64.decode(value).length)) {
+      return 'Key length must be 128, 192, or 256 bits';
+    }
+
+    return null;
   }
 
   String? validateNonce(String? value) {
-    if (value != null) {
-      if (!validateEncoding(value, EncodingTypes.base64)) {
-        return 'Nonce must be in Base64';
-      } else if (base64.decode(value).length != 12) {
-        return 'Nonce length must be 192 bits';
-      } else {
-        return null;
-      }
-    } else {
+    if (value == null || value.isEmpty) {
       return 'Nonce cannot be empty';
     }
+
+    if (!validateEncoding(value, EncodingTypes.base64)) {
+      return 'Nonce must be in Base64';
+    }
+
+    if (base64.decode(value).length != 12) {
+      return 'Nonce length must be 192 bits';
+    }
+
+    return null;
   }
 
   String? validatePlaintext(String? value) {
-    if (value != null && value.isNotEmpty) {
-      return null;
-    } else {
+    if (value == null || value.isEmpty) {
       return 'Plaintext cannot be empty';
     }
+
+    return null;
   }
 
   String? validateCiphertext(String? value) {
-    if (value != null && value.isNotEmpty) {
-      if (!validateEncoding(value, EncodingTypes.base64)) {
-        return 'Ciphertext must be in Base64';
-      } else {
-        return null;
-      }
-    } else {
+    if (value == null || value.isEmpty) {
       return 'Ciphertext cannot be empty';
     }
+
+    if (!validateEncoding(value, EncodingTypes.base64)) {
+      return 'Ciphertext must be in Base64';
+    }
+
+    return null;
   }
 }
