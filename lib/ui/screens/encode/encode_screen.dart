@@ -46,7 +46,8 @@ class _FirstInputForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
-      child: TextField(
+      child: TextFormField(
+        key: _controller.firstInputFormKey,
         controller: _controller.firstInputTextController,
         decoration: const InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -59,6 +60,8 @@ class _FirstInputForm extends StatelessWidget {
         onChanged: (value) {
           _controller.processFirstInput();
         },
+        validator: _controller.validateFirstInput,
+        autovalidateMode: AutovalidateMode.always,
       ),
     );
   }
@@ -89,7 +92,8 @@ class _SecondInputForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
-      child: TextField(
+      child: TextFormField(
+        key: _controller.secondInputFormKey,
         controller: _controller.secondInputTextController,
         decoration: const InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -102,6 +106,8 @@ class _SecondInputForm extends StatelessWidget {
         onChanged: (value) {
           _controller.processSecondInput();
         },
+        validator: _controller.validateSecondInput,
+        autovalidateMode: AutovalidateMode.always,
       ),
     );
   }
