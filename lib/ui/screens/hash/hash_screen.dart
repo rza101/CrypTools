@@ -5,6 +5,7 @@ import 'package:cryptools/ui/widgets/hash_type_selector.dart';
 import 'package:cryptools/ui/widgets/input_type_selector.dart';
 import 'package:cryptools/ui/widgets/loading_wrapper.dart';
 import 'package:cryptools/ui/widgets/multiline_text_field.dart';
+import 'package:cryptools/ui/widgets/tooltip_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -51,10 +52,10 @@ class HashScreen extends StatelessWidget {
 }
 
 class _InputTypeForm extends StatelessWidget {
+  final HashController _controller;
+
   const _InputTypeForm({required HashController controller})
     : _controller = controller;
-
-  final HashController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +76,10 @@ class _InputTypeForm extends StatelessWidget {
 }
 
 class _HmacModeForm extends StatelessWidget {
+  final HashController _controller;
+
   const _HmacModeForm({required HashController controller})
     : _controller = controller;
-
-  final HashController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +99,10 @@ class _HmacModeForm extends StatelessWidget {
 }
 
 class _AutoHashForm extends StatelessWidget {
+  final HashController _controller;
+
   const _AutoHashForm({required HashController controller})
     : _controller = controller;
-
-  final HashController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -129,16 +130,17 @@ class _AutoHashForm extends StatelessWidget {
             child: Text('Hash'),
           ),
         ),
+        TooltipIcon(message: 'Auto Hash can only be enabled on text input'),
       ],
     );
   }
 }
 
 class _InputDataForm extends StatelessWidget {
+  final HashController _controller;
+
   const _InputDataForm({required HashController controller})
     : _controller = controller;
-
-  final HashController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -162,10 +164,10 @@ class _InputDataForm extends StatelessWidget {
 }
 
 class _HmacKeyForm extends StatelessWidget {
+  final HashController _controller;
+
   const _HmacKeyForm({required HashController controller})
     : _controller = controller;
-
-  final HashController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -186,10 +188,10 @@ class _HmacKeyForm extends StatelessWidget {
 }
 
 class _ResultForm extends StatelessWidget {
+  final HashController _controller;
+
   const _ResultForm({required HashController controller})
     : _controller = controller;
-
-  final HashController _controller;
 
   @override
   Widget build(BuildContext context) {

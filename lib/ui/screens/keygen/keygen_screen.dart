@@ -21,6 +21,13 @@ class KeygenScreen extends StatelessWidget {
           children: [
             Text('Currently only supports RSA key'),
             _KeyLengthField(controller: _controller),
+            Obx(
+              () => FilledButton(
+                onPressed:
+                    !_controller.isLoading ? _controller.generateKey : null,
+                child: Text('Generate Key'),
+              ),
+            ),
             context.isWideScreen()
                 ? Row(
                   spacing: 24,
@@ -37,13 +44,6 @@ class KeygenScreen extends StatelessWidget {
                     _PrivateKeyField(controller: _controller),
                   ],
                 ),
-            Obx(
-              () => FilledButton(
-                onPressed:
-                    !_controller.isLoading ? _controller.generateKey : null,
-                child: Text('Generate Key'),
-              ),
-            ),
           ],
         ),
       ),
@@ -56,10 +56,10 @@ class KeygenScreen extends StatelessWidget {
 }
 
 class _KeyLengthField extends StatelessWidget {
+  final KeygenController _controller;
+
   const _KeyLengthField({required KeygenController controller})
     : _controller = controller;
-
-  final KeygenController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +84,10 @@ class _KeyLengthField extends StatelessWidget {
 }
 
 class _PublicKeyField extends StatelessWidget {
+  final KeygenController _controller;
+
   const _PublicKeyField({required KeygenController controller})
     : _controller = controller;
-
-  final KeygenController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -114,10 +114,10 @@ class _PublicKeyField extends StatelessWidget {
 }
 
 class _PrivateKeyField extends StatelessWidget {
+  final KeygenController _controller;
+
   const _PrivateKeyField({required KeygenController controller})
     : _controller = controller;
-
-  final KeygenController _controller;
 
   @override
   Widget build(BuildContext context) {

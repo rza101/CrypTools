@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 class ThemeController extends GetxController {
   final ThemeRepository _themeRepository;
 
-  ThemeController({required ThemeRepository themeRepository})
-    : _themeRepository = themeRepository;
-
   final _isDarkMode = false.obs;
   bool get isDarkMode => _isDarkMode.value;
+
+  ThemeController({required ThemeRepository themeRepository})
+    : _themeRepository = themeRepository;
 
   @override
   void onInit() {

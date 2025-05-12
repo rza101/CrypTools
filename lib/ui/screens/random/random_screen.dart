@@ -1,7 +1,7 @@
 import 'package:cryptools/core/crypto/crypto_encode_service.dart';
-import 'package:cryptools/core/extensions.dart';
 import 'package:cryptools/ui/screens/random/random_controller.dart';
 import 'package:cryptools/ui/widgets/encoding_type_selector.dart';
+import 'package:cryptools/ui/widgets/tooltip_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -13,8 +13,6 @@ class RandomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = context.isWideScreen();
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -24,12 +22,11 @@ class RandomScreen extends StatelessWidget {
           children: [
             _EncodingTypeForm(controller: _controller),
             _ByteLengthForm(controller: _controller),
-            _ResultField(controller: _controller, isWideScreen: isWideScreen),
-            if (isWideScreen)
-              FilledButton(
-                onPressed: _controller.generateRandomValue,
-                child: const Text('Generate Random Value'),
-              ),
+            FilledButton(
+              onPressed: _controller.generateRandomValue,
+              child: const Text('Generate Random Value'),
+            ),
+            _ResultField(controller: _controller),
           ],
         ),
       ),
@@ -38,33 +35,41 @@ class RandomScreen extends StatelessWidget {
 }
 
 class _EncodingTypeForm extends StatelessWidget {
+  final RandomController _controller;
+
   const _EncodingTypeForm({required RandomController controller})
     : _controller = controller;
 
-  final RandomController _controller;
-
   @override
   Widget build(BuildContext context) {
-    return EncodingTypeSelector(
-      initialSelection: EncodingTypes.hex,
-      entries: const [
-        // ascii and utf8 encoding output (for printable characters)
-        // requires more processing to ensure uniform distribution
-        // for example: rejection sampling
-        EncodingTypes.base64,
-        EncodingTypes.base64Url,
-        EncodingTypes.hex,
+    return Row(
+      spacing: 8,
+      children: [
+        EncodingTypeSelector(
+          initialSelection: EncodingTypes.hex,
+          entries: const [
+            // ascii and utf8 encoding output (for printable characters)
+            // requires more processing to ensure uniform distribution
+            // for example: rejection sampling
+            EncodingTypes.base64,
+            EncodingTypes.base64Url,
+            EncodingTypes.hex,
+          ],
+          onSelected: _controller.setEncodingType,
+        ),
+        TooltipIcon(
+          message: 'Encoding can be changed for existing random value',
+        ),
       ],
-      onSelected: _controller.setEncodingType,
     );
   }
 }
 
 class _ByteLengthForm extends StatelessWidget {
+  final RandomController _controller;
+
   const _ByteLengthForm({required RandomController controller})
     : _controller = controller;
-
-  final RandomController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +91,10 @@ class _ByteLengthForm extends StatelessWidget {
 }
 
 class _ResultField extends StatelessWidget {
-  const _ResultField({
-    required RandomController controller,
-    required this.isWideScreen,
-  }) : _controller = controller;
-
   final RandomController _controller;
-  final bool isWideScreen;
+
+  const _ResultField({required RandomController controller})
+    : _controller = controller;
 
   @override
   Widget build(BuildContext context) {
@@ -103,13 +105,6 @@ class _ResultField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: 'Result',
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          suffixIcon:
-              isWideScreen
-                  ? null
-                  : IconButton(
-                    onPressed: _controller.generateRandomValue,
-                    icon: Icon(Icons.refresh),
-                  ),
           border: const OutlineInputBorder(),
         ),
         textAlignVertical: TextAlignVertical.top,

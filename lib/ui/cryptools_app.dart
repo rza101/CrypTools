@@ -3,7 +3,6 @@ import 'package:cryptools/ui/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO hint with info icon button on elements
 class CrypToolsApp extends StatelessWidget {
   final ThemeController _themeController = Get.find();
 

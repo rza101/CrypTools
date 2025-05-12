@@ -1,6 +1,7 @@
 import 'package:cryptools/core/crypto/crypto_encode_service.dart';
 import 'package:cryptools/ui/screens/encode/encode_controller.dart';
 import 'package:cryptools/ui/widgets/encoding_type_selector.dart';
+import 'package:cryptools/ui/widgets/tooltip_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,12 +19,21 @@ class EncodeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24,
           children: [
-            EncodingTypeSelector(
-              initialSelection: EncodingTypes.utf8,
-              onSelected: _controller.setFirstEncodingType,
+            Row(
+              spacing: 8,
+              children: [
+                EncodingTypeSelector(
+                  initialSelection: EncodingTypes.utf8,
+                  onSelected: _controller.setFirstEncodingType,
+                ),
+                TooltipIcon(
+                  message:
+                      'Text and encoding type can be modified at both input field',
+                ),
+              ],
             ),
             _FirstInputForm(controller: _controller),
-            _Divider(),
+            _FormDivider(),
             EncodingTypeSelector(
               initialSelection: EncodingTypes.utf8,
               onSelected: _controller.setSecondEncodingType,
@@ -37,10 +47,10 @@ class EncodeScreen extends StatelessWidget {
 }
 
 class _FirstInputForm extends StatelessWidget {
+  final EncodeController _controller;
+
   const _FirstInputForm({required EncodeController controller})
     : _controller = controller;
-
-  final EncodeController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +77,8 @@ class _FirstInputForm extends StatelessWidget {
   }
 }
 
-class _Divider extends StatelessWidget {
-  const _Divider();
+class _FormDivider extends StatelessWidget {
+  const _FormDivider();
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +93,10 @@ class _Divider extends StatelessWidget {
 }
 
 class _SecondInputForm extends StatelessWidget {
+  final EncodeController _controller;
+
   const _SecondInputForm({required EncodeController controller})
     : _controller = controller;
-
-  final EncodeController _controller;
 
   @override
   Widget build(BuildContext context) {

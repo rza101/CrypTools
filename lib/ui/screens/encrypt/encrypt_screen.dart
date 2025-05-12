@@ -36,10 +36,10 @@ class EncryptScreen extends StatelessWidget {
 }
 
 class _KeyForm extends StatelessWidget {
+  final EncryptController _controller;
+
   const _KeyForm({required EncryptController controller})
     : _controller = controller;
-
-  final EncryptController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +68,10 @@ class _KeyForm extends StatelessWidget {
 }
 
 class _NonceForm extends StatelessWidget {
+  final EncryptController _controller;
+
   const _NonceForm({required EncryptController controller})
     : _controller = controller;
-
-  final EncryptController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +99,10 @@ class _NonceForm extends StatelessWidget {
 }
 
 class _PlaintextForm extends StatelessWidget {
+  final EncryptController _controller;
+
   const _PlaintextForm({required EncryptController controller})
     : _controller = controller;
-
-  final EncryptController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -122,10 +122,10 @@ class _PlaintextForm extends StatelessWidget {
 }
 
 class _EncryptDecryptButton extends StatelessWidget {
+  final EncryptController _controller;
+
   const _EncryptDecryptButton({required EncryptController controller})
     : _controller = controller;
-
-  final EncryptController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -151,10 +151,10 @@ class _EncryptDecryptButton extends StatelessWidget {
 }
 
 class _CiphertextForm extends StatelessWidget {
+  final EncryptController _controller;
+
   const _CiphertextForm({required EncryptController controller})
     : _controller = controller;
-
-  final EncryptController _controller;
 
   @override
   Widget build(BuildContext context) {

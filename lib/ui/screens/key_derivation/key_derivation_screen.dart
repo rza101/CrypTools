@@ -79,10 +79,10 @@ class KeyDerivationScreen extends StatelessWidget {
 }
 
 class _PlaintextForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _PlaintextForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +111,10 @@ class _PlaintextForm extends StatelessWidget {
 }
 
 class _BcryptParametersForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _BcryptParametersForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -139,10 +139,10 @@ class _BcryptParametersForm extends StatelessWidget {
 }
 
 class _Pbkdf2ParametersForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _Pbkdf2ParametersForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -166,10 +166,10 @@ class _Pbkdf2ParametersForm extends StatelessWidget {
 }
 
 class _Pbkdf2KeyLengthForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _Pbkdf2KeyLengthForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -194,10 +194,10 @@ class _Pbkdf2KeyLengthForm extends StatelessWidget {
 }
 
 class _Pbkdf2RoundsForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _Pbkdf2RoundsForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -222,10 +222,10 @@ class _Pbkdf2RoundsForm extends StatelessWidget {
 }
 
 class _Pbkdf2SaltForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _Pbkdf2SaltForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -253,10 +253,10 @@ class _Pbkdf2SaltForm extends StatelessWidget {
 }
 
 class _ScryptParametersForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _ScryptParametersForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -274,10 +274,10 @@ class _ScryptParametersForm extends StatelessWidget {
 }
 
 class _ScryptCostForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _ScryptCostForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -302,10 +302,10 @@ class _ScryptCostForm extends StatelessWidget {
 }
 
 class _ScryptBlockSizeForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _ScryptBlockSizeForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -330,10 +330,10 @@ class _ScryptBlockSizeForm extends StatelessWidget {
 }
 
 class _ScryptParallelismForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _ScryptParallelismForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -358,10 +358,10 @@ class _ScryptParallelismForm extends StatelessWidget {
 }
 
 class _ScryptKeyLengthForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _ScryptKeyLengthForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -386,10 +386,10 @@ class _ScryptKeyLengthForm extends StatelessWidget {
 }
 
 class _ScryptSaltForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _ScryptSaltForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -417,10 +417,10 @@ class _ScryptSaltForm extends StatelessWidget {
 }
 
 class _DerivedKeyForm extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _DerivedKeyForm({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -454,10 +454,10 @@ class _DerivedKeyForm extends StatelessWidget {
 }
 
 class _ResultField extends StatelessWidget {
+  final KeyDerivationController _controller;
+
   const _ResultField({required KeyDerivationController controller})
     : _controller = controller;
-
-  final KeyDerivationController _controller;
 
   @override
   Widget build(BuildContext context) {

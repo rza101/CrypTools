@@ -139,48 +139,52 @@ class _MainScaffoldState extends State<MainScaffold> {
                 ],
               )
               : null,
-      body:
-          isWideScreen
-              ? Row(
-                children: [
-                  SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: MediaQuery.sizeOf(context).height,
-                      ),
-                      child: IntrinsicHeight(
-                        child: NavigationRail(
-                          selectedIndex:
-                              currentRouteIndex >= 0 ? currentRouteIndex : 0,
-                          onDestinationSelected: (index) {
-                            context.go(bottomNavRoutesPath[index]);
-                          },
-                          labelType: NavigationRailLabelType.all,
-                          leading: IconButton(
-                            onPressed: () {
-                              _scaffoldKey.currentState?.openDrawer();
+      body: SafeArea(
+        child:
+            isWideScreen
+                ? Row(
+                  children: [
+                    SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: MediaQuery.sizeOf(context).height,
+                        ),
+                        child: IntrinsicHeight(
+                          child: NavigationRail(
+                            selectedIndex:
+                                currentRouteIndex >= 0 ? currentRouteIndex : 0,
+                            onDestinationSelected: (index) {
+                              context.go(bottomNavRoutesPath[index]);
                             },
-                            icon: const Icon(Icons.menu),
+                            labelType: NavigationRailLabelType.all,
+                            leading: IconButton(
+                              onPressed: () {
+                                _scaffoldKey.currentState?.openDrawer();
+                              },
+                              icon: const Icon(Icons.menu),
+                            ),
+                            destinations:
+                                _destinations
+                                    .map(
+                                      (destination) =>
+                                          NavigationRailDestination(
+                                            icon: destination.icon,
+                                            label: Text(destination.label),
+                                            selectedIcon:
+                                                destination.selectedIcon,
+                                          ),
+                                    )
+                                    .toList(),
                           ),
-                          destinations:
-                              _destinations
-                                  .map(
-                                    (destination) => NavigationRailDestination(
-                                      icon: destination.icon,
-                                      label: Text(destination.label),
-                                      selectedIcon: destination.selectedIcon,
-                                    ),
-                                  )
-                                  .toList(),
                         ),
                       ),
                     ),
-                  ),
-                  const VerticalDivider(width: 1),
-                  Expanded(child: widget.child),
-                ],
-              )
-              : widget.child,
+                    const VerticalDivider(width: 1),
+                    Expanded(child: widget.child),
+                  ],
+                )
+                : widget.child,
+      ),
     );
   }
 }

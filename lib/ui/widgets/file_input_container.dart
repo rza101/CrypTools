@@ -26,40 +26,10 @@ class _FileInputContainerState extends State<FileInputContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          widget._enabled && file == null
-              ? () async {
-                final result = await FilePicker.platform.pickFiles();
-                final resultPlatformFile = result?.files.firstOrNull;
-
-                if (resultPlatformFile != null) {
-                  final resultFile = XFile(resultPlatformFile.path!);
-                  final resultFilename = resultPlatformFile.name;
-
-                  setState(() {
-                    file = resultFile;
-                    filename = resultFilename;
-
-                    widget._onFileSet(resultFile);
-                  });
-                }
-              }
-              : null,
+      onTap: widget._enabled && file == null ? _onTap : null,
       child: DropTarget(
         enable: widget._enabled && file == null,
-        onDragDone: (details) {
-          final dropItem = details.files.firstOrNull;
-
-          if (dropItem != null) {
-            final resultFile = XFile(dropItem.path);
-            final resultFilename = dropItem.name;
-
-            file = resultFile;
-            filename = resultFilename;
-
-            widget._onFileSet(resultFile);
-          }
-        },
+        onDragDone: _onDragRelease,
         onDragEntered: (detail) {
           setState(() {
             dragging = true;
@@ -92,12 +62,7 @@ class _FileInputContainerState extends State<FileInputContainer> {
                     children: [
                       Text('Selected File: $filename'),
                       FilledButton(
-                        onPressed:
-                            widget._enabled
-                                ? () {
-                                  clearFile();
-                                }
-                                : null,
+                        onPressed: widget._enabled ? clearFile : null,
                         style: FilledButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
@@ -120,6 +85,37 @@ class _FileInputContainerState extends State<FileInputContainer> {
         ),
       ),
     );
+  }
+
+  void _onDragRelease(DropDoneDetails details) {
+    final dropItem = details.files.firstOrNull;
+
+    if (dropItem != null) {
+      final resultFile = XFile(dropItem.path);
+      final resultFilename = dropItem.name;
+
+      file = resultFile;
+      filename = resultFilename;
+
+      widget._onFileSet(resultFile);
+    }
+  }
+
+  void _onTap() async {
+    final result = await FilePicker.platform.pickFiles();
+    final resultPlatformFile = result?.files.firstOrNull;
+
+    if (resultPlatformFile != null) {
+      final resultFile = XFile(resultPlatformFile.path!);
+      final resultFilename = resultPlatformFile.name;
+
+      setState(() {
+        file = resultFile;
+        filename = resultFilename;
+
+        widget._onFileSet(resultFile);
+      });
+    }
   }
 
   void clearFile() {
