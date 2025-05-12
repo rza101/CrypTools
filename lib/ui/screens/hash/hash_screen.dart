@@ -3,6 +3,7 @@ import 'package:cryptools/ui/screens/hash/hash_controller.dart';
 import 'package:cryptools/ui/widgets/file_input_container.dart';
 import 'package:cryptools/ui/widgets/hash_type_selector.dart';
 import 'package:cryptools/ui/widgets/input_type_selector.dart';
+import 'package:cryptools/ui/widgets/loading_wrapper.dart';
 import 'package:cryptools/ui/widgets/multiline_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,37 +15,37 @@ class HashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                HashTypeSelector(
-                  enabled: !_controller.isLoading,
-                  initialSelection: HashAlgorithms.md5,
-                  onSelected: _controller.setSelectedHashAlgorithm,
-                ),
-                const SizedBox(height: 24),
-                _InputTypeForm(controller: _controller),
-                const SizedBox(height: 24),
-                _HmacModeForm(controller: _controller),
-                const SizedBox(height: 24),
-                _AutoHashForm(controller: _controller),
-                const SizedBox(height: 24),
-                _InputDataForm(controller: _controller),
-                _HmacKeyForm(controller: _controller),
-                const SizedBox(height: 24),
-                _ResultForm(controller: _controller),
-              ],
+    final screen = SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Obx(
+              () => HashTypeSelector(
+                enabled: !_controller.isLoading,
+                initialSelection: HashAlgorithms.md5,
+                onSelected: _controller.setSelectedHashAlgorithm,
+              ),
             ),
-          ),
+            const SizedBox(height: 24),
+            _InputTypeForm(controller: _controller),
+            const SizedBox(height: 24),
+            _HmacModeForm(controller: _controller),
+            const SizedBox(height: 24),
+            _AutoHashForm(controller: _controller),
+            const SizedBox(height: 24),
+            _InputDataForm(controller: _controller),
+            _HmacKeyForm(controller: _controller),
+            const SizedBox(height: 24),
+            _ResultForm(controller: _controller),
+          ],
         ),
-        if (_controller.isLoading)
-          Expanded(child: Center(child: CircularProgressIndicator())),
-      ],
+      ),
+    );
+
+    return Obx(
+      () => LoadingWrapper(isLoading: _controller.isLoading, child: screen),
     );
   }
 }
@@ -141,10 +142,10 @@ class _InputDataForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => SizedBox(
-        height: 200,
-        child: switch (_controller.selectedInputType) {
+    return SizedBox(
+      height: 200,
+      child: Obx(
+        () => switch (_controller.selectedInputType) {
           InputType.text => MultilineTextField(
             controller: _controller.plaintextTextController,
             labelText: 'Plaintext',
@@ -192,11 +193,13 @@ class _ResultForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultilineTextField(
-      controller: _controller.hashResultTextController,
-      labelText: 'Hash Result',
-      enabled: !_controller.isLoading,
-      readOnly: true,
+    return Obx(
+      () => MultilineTextField(
+        controller: _controller.hashResultTextController,
+        labelText: 'Hash Result',
+        enabled: !_controller.isLoading,
+        readOnly: true,
+      ),
     );
   }
 }

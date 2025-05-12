@@ -40,6 +40,9 @@ class KeyDerivationController extends GetxController {
   final scryptParallelismFormKey = GlobalKey<FormFieldState>(); // p
   final scryptSaltFormKey = GlobalKey<FormFieldState>();
 
+  final _isLoading = false.obs;
+  bool get isLoading => _isLoading.value;
+
   final _pbkdf2HashAlgorithm = HashAlgorithms.sha256.obs;
   HashAlgorithms get pbkdf2HashAlgorithm => _pbkdf2HashAlgorithm.value;
 
@@ -88,12 +91,14 @@ class KeyDerivationController extends GetxController {
       return;
     }
 
-    final plaintext = plaintextInputController.text;
-    final derivedKey = derivedKeyInputController.text;
-
-    String result = '';
-
     try {
+      _isLoading.value = true;
+
+      final plaintext = plaintextInputController.text;
+      final derivedKey = derivedKeyInputController.text;
+
+      String result = '';
+
       switch (keyDerivationAlgorithm) {
         case KeyDerivationAlgorithms.bcrypt:
           if (bcryptRoundsFormKey.currentState?.validate() != true) {
@@ -103,6 +108,7 @@ class KeyDerivationController extends GetxController {
           if (processType == KeyDerivationProcessType.derive) {
             result = await _keyDerivationService.hashBcrypt(
               plaintext: plaintext,
+              logRounds: int.parse(bcryptRoundsInputController.text),
             );
           } else if (processType == KeyDerivationProcessType.verify) {
             result =
@@ -198,6 +204,8 @@ class KeyDerivationController extends GetxController {
       resultController.text = result;
     } catch (e) {
       resultController.text = 'Processing error';
+    } finally {
+      _isLoading.value = false;
     }
   }
 

@@ -14,6 +14,9 @@ class KeygenController extends GetxController {
 
   final keyLengthFormKey = GlobalKey<FormFieldState>();
 
+  final _isLoading = false.obs;
+  bool get isLoading => _isLoading.value;
+
   KeygenController({
     required CryptoKeygenService keygenService,
     required CryptoRandomService randomService,
@@ -32,6 +35,8 @@ class KeygenController extends GetxController {
         return;
       }
 
+      _isLoading.value = true;
+
       final keyLength = int.parse(rsaKeyLengthInputController.text);
       final keyPair = await _keygenService.generateRSAKeyPair(
         keyLength,
@@ -43,7 +48,8 @@ class KeygenController extends GetxController {
     } catch (e) {
       publicKeyOutputController.text = 'Key generation failed';
       privateKeyOutputController.text = 'Key generation failed';
-      e.printError();
+    } finally {
+      _isLoading.value = false;
     }
   }
 

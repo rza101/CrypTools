@@ -46,6 +46,8 @@ class EncryptController extends GetxController {
     }
 
     try {
+      _isLoading.value = true;
+
       final Uint8List key = base64.decode(keyTextController.text);
       final Uint8List nonce = base64.decode(nonceTextController.text);
       final Uint8List plaintext = utf8.encode(plaintextTextController.text);
@@ -60,6 +62,8 @@ class EncryptController extends GetxController {
       ciphertextFormKey.currentState?.validate();
     } catch (e) {
       ciphertextTextController.text = 'Encryption failed';
+    } finally {
+      _isLoading.value = false;
     }
   }
 
@@ -71,6 +75,8 @@ class EncryptController extends GetxController {
     }
 
     try {
+      _isLoading.value = true;
+
       final Uint8List key = base64.decode(keyTextController.text);
       final Uint8List nonce = base64.decode(nonceTextController.text);
       final Uint8List ciphertext = base64.decode(ciphertextTextController.text);
@@ -85,6 +91,8 @@ class EncryptController extends GetxController {
       plaintextFormKey.currentState?.validate();
     } catch (e) {
       plaintextTextController.text = 'Decryption failed';
+    } finally {
+      _isLoading.value = false;
     }
   }
 
